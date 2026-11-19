@@ -1,9 +1,10 @@
+import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
-// Server e logged in user ke ana
-export async function getCurrentUser() {
+// Server e logged in user ke ana (ek request e ekbar-i check hobe)
+export const getCurrentUser = cache(async () => {
   const requestHeaders = await headers();
   const session = await auth.api.getSession({ headers: requestHeaders });
 
@@ -12,7 +13,7 @@ export async function getCurrentUser() {
   }
 
   return session.user;
-}
+});
 
 // Je role er page, sudhu sei role dhukte parbe
 export async function requireRole(role: string) {

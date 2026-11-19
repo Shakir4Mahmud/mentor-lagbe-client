@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import PageLoader from "@/components/shared/PageLoader";
+import DashboardShell from "@/components/dashboard/DashboardShell";
+import type { DashboardUser } from "@/components/dashboard/types";
 
 async function DashboardGuard({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
@@ -10,7 +12,26 @@ async function DashboardGuard({ children }: { children: React.ReactNode }) {
     redirect("/sign-in");
   }
 
-  return <>{children}</>;
+  let role: DashboardUser["role"] = "student";
+  if (user.role === "tutor" || user.role === "admin") {
+    role = user.role;
+  }
+
+  let plan = "free";
+  if (user.plan) {
+    plan = user.plan;
+  }
+
+  const dashboardUser: DashboardUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    image: user.image ?? null,
+    role: role,
+    plan: plan,
+  };
+
+  return <DashboardShell user={dashboardUser}>{children}</DashboardShell>;
 }
 
 export default function DashboardLayout({

@@ -1,17 +1,16 @@
-import Link from "next/link";
-import { requireRole } from "@/lib/session";
-import { Button } from "@/components/ui/button";
+import StudentOverview from "@/components/dashboard/StudentOverview";
 
-export default async function StudentDashboardPage() {
-  const user = await requireRole("student");
-
+export default function StudentDashboardPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
+    <div>
       <h1 className="text-3xl font-semibold">Student Dashboard</h1>
-      <p className="mt-3 text-muted-foreground">Welcome, {user.name}</p>
-      <Button asChild className="mt-6">
-        <Link href="/">Back to Home</Link>
-      </Button>
+      <p className="mt-2 text-muted-foreground">
+        Track your applications and learning plan.
+      </p>
+
+      <div className="mt-8">
+        <StudentOverview />
+      </div>
     </div>
   );
 }
