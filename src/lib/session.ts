@@ -1,12 +1,12 @@
 import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getAuth } from "@/lib/auth";
 
 // Server e logged in user ke ana (ek request e ekbar-i check hobe)
 export const getCurrentUser = cache(async () => {
   const requestHeaders = await headers();
-  const session = await auth.api.getSession({ headers: requestHeaders });
+  const session = await getAuth().api.getSession({ headers: requestHeaders });
 
   if (!session) {
     return null;

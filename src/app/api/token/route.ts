@@ -1,11 +1,11 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { auth } from "@/lib/auth";
+import { getAuth } from "@/lib/auth";
 
 export async function GET() {
   const requestHeaders = await headers();
-  const session = await auth.api.getSession({ headers: requestHeaders });
+  const session = await getAuth().api.getSession({ headers: requestHeaders });
 
   if (!session) {
     return NextResponse.json({ message: "Not logged in" }, { status: 401 });
