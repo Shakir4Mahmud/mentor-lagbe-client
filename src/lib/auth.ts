@@ -2,7 +2,23 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 
-const client = new MongoClient(process.env.MONGODB_URI as string);
+// Vercel e function instance reuse hoy, tai client ke global cache kori.
+// family: 4 -> Vercel theke Atlas er IPv6 address e connect fail korle IPv4 force kore.
+const globalForMongo = globalThis as unknown as {
+  mongoClient?: MongoClient;
+};
+
+if (!globalForMongo.mongoClient) {
+  globalForMongo.mongoClient = new MongoClient(
+    process.env.MONGODB_URI as string,
+    {
+      family: 4,
+      serverSelectionTimeoutMS: 10000,
+    }
+  );
+}
+
+const client = globalForMongo.mongoClient;
 const db = client.db();
 
 export const auth = betterAuth({
