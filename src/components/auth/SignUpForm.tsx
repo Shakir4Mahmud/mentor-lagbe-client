@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { Eye, EyeOff, GraduationCap, BookOpen, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { roleDashboardPath } from "@/lib/dashboard-path";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -94,7 +95,11 @@ export default function SignUpForm() {
 
     toast.success("Account created successfully!");
     setLoading(false);
-    router.push("/");
+
+    // sign up er por sei role er dashboard e pathao
+    const newRole = result.data?.user?.role ?? role;
+
+    router.replace(roleDashboardPath(newRole));
     router.refresh();
   }
 

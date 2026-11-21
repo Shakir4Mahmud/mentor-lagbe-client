@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { roleDashboardPath, safeRedirectPath } from "@/lib/dashboard-path";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,14 +23,7 @@ export default function SignInForm() {
 
   // login er por kothay jabe
   const redirectParam = searchParams.get("redirect");
-  let redirectTo = "/";
-  if (
-    redirectParam &&
-    redirectParam.startsWith("/") &&
-    !redirectParam.startsWith("//")
-  ) {
-    redirectTo = redirectParam;
-  }
+  const explicitRedirect = safeRedirectPath(redirectParam);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -87,7 +81,12 @@ export default function SignInForm() {
 
     toast.success("Welcome back!");
     setLoading(false);
-    router.push(redirectTo);
+
+    // role onujayi dashboard e pathao (redirect param thakle setai priority)
+    const role = result.data?.user?.role;
+    const destination = explicitRedirect ?? roleDashboardPath(role);
+
+    router.replace(destination);
     router.refresh();
   }
 
