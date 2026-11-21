@@ -82,7 +82,7 @@ export default function DashboardShell({
       <div
         className={cn(
           "flex min-h-screen flex-col transition-all duration-300 ease-out",
-          collapsed ? "lg:pl-20" : "lg:pl-72"
+          collapsed ? "lg:pl-20" : "lg:pl-72",
         )}
       >
         <DashboardTopbar
@@ -92,8 +92,8 @@ export default function DashboardShell({
           onMenuClick={openMenu}
         />
 
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-          <div className="w-full">{children}</div>
+        <main className="min-w-0 flex-1 overflow-x-clip px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+          <div className="w-full min-w-0">{children}</div>
         </main>
       </div>
     </div>

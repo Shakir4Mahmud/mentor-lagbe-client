@@ -1,17 +1,16 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import TutorOverview from "@/components/dashboard/TutorOverview";
 
 export default function TutorDashboardPage() {
   return (
     <div>
       <h1 className="text-3xl font-semibold">Tutor Dashboard</h1>
       <p className="mt-2 text-muted-foreground">
-        Your overview and stats will appear here soon.
+        Your tuitions, applicants and plan at a glance.
       </p>
 
-      <Button asChild variant="outline" className="mt-6">
-        <Link href="/">Back to Home</Link>
-      </Button>
+      <div className="mt-8">
+        <TutorOverview />
+      </div>
     </div>
   );
 }

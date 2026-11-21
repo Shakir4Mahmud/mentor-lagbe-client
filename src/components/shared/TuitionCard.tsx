@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { BookOpen, GraduationCap, CalendarDays, MapPin } from "lucide-react";
+import {
+  BookOpen,
+  GraduationCap,
+  CalendarDays,
+  MapPin,
+  Star,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BookmarkButton from "@/components/shared/BookmarkButton";
 import type { Tuition } from "@/types";
@@ -23,6 +29,17 @@ export default function TuitionCard({ tuition, index = 0 }: TuitionCardProps) {
 
   const tutorInitial = tuition.tutorName.charAt(0).toUpperCase();
   const delay = (index % 3) * 0.1;
+
+  // -1 mane ei list e rating er data ashe ni (jemon Saved page)
+  let ratingCount = -1;
+  if (tuition.ratingCount !== undefined) {
+    ratingCount = tuition.ratingCount;
+  }
+
+  let ratingAverage = 0;
+  if (tuition.ratingAverage !== undefined) {
+    ratingAverage = tuition.ratingAverage;
+  }
 
   return (
     <motion.div
@@ -80,12 +97,30 @@ export default function TuitionCard({ tuition, index = 0 }: TuitionCardProps) {
           </div>
         </div>
 
-        {/* Tutor */}
+        {/* Tutor ar rating */}
         <div className="mt-4 flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-primary">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-primary">
             {tutorInitial}
           </span>
-          <span className="text-sm font-medium">{tuition.tutorName}</span>
+          <span className="min-w-0 flex-1 truncate text-sm font-medium">
+            {tuition.tutorName}
+          </span>
+
+          {ratingCount > 0 && (
+            <span className="flex shrink-0 items-center gap-1 text-sm font-semibold">
+              <Star className="h-4 w-4 fill-accent text-accent" />
+              {ratingAverage.toFixed(1)}
+              <span className="font-normal text-muted-foreground">
+                ({ratingCount})
+              </span>
+            </span>
+          )}
+
+          {ratingCount === 0 && (
+            <span className="shrink-0 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-primary">
+              New
+            </span>
+          )}
         </div>
 
         {/* Fee and button (shob somoy niche) */}

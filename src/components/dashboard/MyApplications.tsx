@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FileX, Loader2, Trash2 } from "lucide-react";
+import { FileX, Loader2, Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import type { Application } from "@/types";
 import StatusBadge from "@/components/dashboard/StatusBadge";
+import ReviewDialog from "@/components/dashboard/ReviewDialog";
+import { StarDisplay } from "@/components/shared/StarRating";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -40,6 +42,8 @@ export default function MyApplications() {
 
   const [cancelTarget, setCancelTarget] = useState<Application | null>(null);
   const [cancelling, setCancelling] = useState(false);
+
+  const [reviewTarget, setReviewTarget] = useState<Application | null>(null);
 
   useEffect(() => {
     async function loadApplications() {
@@ -93,6 +97,52 @@ export default function MyApplications() {
     }
 
     setCancelling(false);
+  }
+
+  // Review save hole list e rating boshai
+  function handleReviewSaved(rating: number, review: string) {
+    if (!reviewTarget) {
+      return;
+    }
+
+    const updatedList = applications.map((item) => {
+      if (item._id === reviewTarget._id) {
+        return {
+          ...item,
+          rating: rating,
+          review: review,
+          reviewedAt: new Date().toISOString(),
+        };
+      }
+      return item;
+    });
+
+    setApplications(updatedList);
+    setReviewTarget(null);
+  }
+
+  // Desktop table er accepted row er action
+  function renderRateAction(item: Application) {
+    if (item.rating) {
+      return (
+        <div className="flex flex-col items-end gap-1">
+          <StarDisplay value={item.rating} size={16} />
+          <span className="text-xs text-muted-foreground">Your review</span>
+        </div>
+      );
+    }
+
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setReviewTarget(item)}
+        className="rounded-full border-accent/50 hover:bg-accent/15"
+      >
+        <Star className="mr-1 h-4 w-4 text-accent" />
+        Rate
+      </Button>
+    );
   }
 
   if (loading) {
@@ -210,7 +260,7 @@ export default function MyApplications() {
                       </td>
 
                       <td className="px-5 py-4 text-right">
-                        {item.status === "pending" ? (
+                        {item.status === "pending" && (
                           <Button
                             variant="outline"
                             size="sm"
@@ -220,7 +270,15 @@ export default function MyApplications() {
                             <Trash2 className="mr-1 h-4 w-4" />
                             Cancel
                           </Button>
-                        ) : (
+                        )}
+
+                        {item.status === "accepted" && (
+                          <div className="flex justify-end">
+                            {renderRateAction(item)}
+                          </div>
+                        )}
+
+                        {item.status === "rejected" && (
                           <span className="text-xs text-muted-foreground">
                             No action
                           </span>
@@ -252,7 +310,8 @@ export default function MyApplications() {
 
                 <div className="mt-3 space-y-1 text-sm text-muted-foreground">
                   <p>
-                    Tutor: <span className="text-foreground">{item.tutorName}</span>
+                    Tutor:{" "}
+                    <span className="text-foreground">{item.tutorName}</span>
                   </p>
                   <p>{item.tutorEmail}</p>
                   <p>
@@ -275,10 +334,43 @@ export default function MyApplications() {
                     Cancel application
                   </Button>
                 )}
+
+                {item.status === "accepted" && (
+                  <div className="mt-4">
+                    {item.rating ? (
+                      <div className="flex items-center justify-between rounded-xl bg-muted p-3 text-sm">
+                        <span className="text-muted-foreground">
+                          Your rating
+                        </span>
+                        <StarDisplay value={item.rating} size={16} />
+                      </div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setReviewTarget(item)}
+                        className="w-full rounded-full border-accent/50 hover:bg-accent/15"
+                      >
+                        <Star className="mr-1 h-4 w-4 text-accent" />
+                        Rate this tuition
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </>
+      )}
+
+      {/* Review modal */}
+      {reviewTarget && (
+        <ReviewDialog
+          key={reviewTarget._id}
+          application={reviewTarget}
+          onClose={() => setReviewTarget(null)}
+          onSaved={handleReviewSaved}
+        />
       )}
 
       {/* Cancel confirm modal */}

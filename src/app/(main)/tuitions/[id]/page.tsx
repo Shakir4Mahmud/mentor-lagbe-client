@@ -14,6 +14,7 @@ import {
 import { publicFetch } from "@/lib/api";
 import type { TuitionDetailsResponse } from "@/types";
 import ApplyCard from "@/components/tuitions/ApplyCard";
+import ReviewsSection from "@/components/tuitions/ReviewsSection";
 import BookmarkButton from "@/components/shared/BookmarkButton";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -172,7 +173,9 @@ async function TuitionDetailsContent({
               {tuition.description}
             </p>
           </div>
-
+          {/* Student reviews */}
+          <ReviewsSection reviews={data.reviews} rating={data.rating} />
+          
           {/* Tutor profile */}
           <div className="rounded-3xl border bg-card p-6 sm:p-8">
             <h2 className="text-xl font-semibold">Meet your tutor</h2>

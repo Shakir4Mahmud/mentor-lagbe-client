@@ -5,6 +5,10 @@ import PageLoader from "@/components/shared/PageLoader";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import type { DashboardUser } from "@/components/dashboard/types";
 
+export const metadata = {
+  title: "Dashboard | MentorLagbe",
+};
+
 async function DashboardGuard({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
 

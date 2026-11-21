@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { SearchX } from "lucide-react";
 import { publicFetch } from "@/lib/api";
 import type { TuitionListResponse } from "@/types";
+import TuitionCard from "@/components/shared/TuitionCard";
 import TuitionFilters from "@/components/tuitions/TuitionFilters";
-import TuitionList from "@/components/tuitions/TuitionList";
+import Pagination from "@/components/tuitions/Pagination";
 import { Button } from "@/components/ui/button";
 
 export type TuitionSearchParams = {
@@ -11,11 +13,15 @@ export type TuitionSearchParams = {
   subject?: string;
   classLevel?: string;
   mode?: string;
+  page?: string;
 };
 
 type TuitionsContentProps = {
   searchParams: Promise<TuitionSearchParams>;
 };
+
+// Prottek page e koyta card
+const pageSize = 9;
 
 export default async function TuitionsContent({
   searchParams,
@@ -43,7 +49,13 @@ export default async function TuitionsContent({
     mode = params.mode;
   }
 
-  // Filter er query, See More button e lagbe
+  // Kon page, vul hole page 1
+  let page = Number(params.page);
+  if (isNaN(page) || page < 1) {
+    page = 1;
+  }
+
+  // Filter er query (page chhara), pagination link e lagbe
   const baseParams = new URLSearchParams();
   if (search !== "") {
     baseParams.set("search", search);
@@ -59,14 +71,13 @@ export default async function TuitionsContent({
   }
   const baseQuery = baseParams.toString();
 
-  // Duto component er key alada rakhlam jate ek na hoy
+  // Filter bar er key. Filter bodlale bar reset hoy, page bodlale hoy na
   const filtersKey = "filters-" + baseQuery;
-  const listKey = "list-" + baseQuery;
 
-  // Prothom 9 ta tuition server theke
+  // Server theke ei page er tuition ani
   const apiParams = new URLSearchParams(baseQuery);
-  apiParams.set("page", "1");
-  apiParams.set("limit", "9");
+  apiParams.set("page", String(page));
+  apiParams.set("limit", String(pageSize));
 
   let data: TuitionListResponse | null = null;
   let hasError = false;
@@ -79,6 +90,23 @@ export default async function TuitionsContent({
     hasError = true;
   }
 
+  // Page number beshi dile (jemon ?page=99) page 1 e pathai
+  if (data && data.totalPages > 0 && page > data.totalPages) {
+    if (baseQuery === "") {
+      redirect("/tuitions");
+    }
+    redirect("/tuitions?" + baseQuery);
+  }
+
+  // "Showing 10 to 12 of 12 tuitions" er text
+  let countText = "";
+  if (data && data.total > 0) {
+    const from = (data.page - 1) * data.limit + 1;
+    const to = from + data.tuitions.length - 1;
+    countText =
+      "Showing " + from + " to " + to + " of " + data.total + " tuitions";
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <TuitionFilters
@@ -88,6 +116,9 @@ export default async function TuitionsContent({
         classLevel={classLevel}
         mode={mode}
       />
+
+      {/* Page bodlale ekhane scroll hoy */}
+      <div id="tuition-results" className="scroll-mt-28" />
 
       {hasError && (
         <p className="mt-10 rounded-2xl border bg-card p-10 text-center text-muted-foreground">
@@ -112,12 +143,25 @@ export default async function TuitionsContent({
       )}
 
       {data && data.tuitions.length > 0 && (
-        <TuitionList
-          key={listKey}
-          initialTuitions={data.tuitions}
-          total={data.total}
-          baseQuery={baseQuery}
-        />
+        <>
+          <p className="mt-8 text-sm text-muted-foreground">{countText}</p>
+
+          {/* key bodlale card gulo notun kore animate hoy */}
+          <div
+            key={"page-" + data.page}
+            className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {data.tuitions.map((tuition, index) => (
+              <TuitionCard key={tuition._id} tuition={tuition} index={index} />
+            ))}
+          </div>
+
+          <Pagination
+            page={data.page}
+            totalPages={data.totalPages}
+            baseQuery={baseQuery}
+          />
+        </>
       )}
     </div>
   );

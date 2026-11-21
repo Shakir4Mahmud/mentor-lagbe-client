@@ -11,9 +11,11 @@ import {
   BookOpen,
   Lock,
   CreditCard,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { apiFetch } from "@/lib/api";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { Button } from "@/components/ui/button";
 
@@ -73,6 +75,7 @@ export default function PricingSection({
 
   // user nijer click korle ekhane save hobe, na korle null thakbe
   const [chosenAudience, setChosenAudience] = useState<string | null>(null);
+  const [checkingOut, setCheckingOut] = useState(false);
 
   // login kora user er role ar plan
   const user = session?.user;
@@ -116,14 +119,28 @@ export default function PricingSection({
     }
   }
 
-  function handleSubscribe() {
+  async function handleSubscribe() {
     // login na thakle sign in e pathao, login er por abar pricing e ashbe
     if (!user) {
       router.push("/sign-in?redirect=/pricing");
       return;
     }
 
-    toast.info("Stripe checkout is being connected. Coming soon!");
+    setCheckingOut(true);
+
+    try {
+      const data = await apiFetch<{ url: string }>(
+        "/api/payments/create-checkout-session",
+        { method: "POST" }
+      );
+
+      // Stripe er payment page e niye jabo
+      window.location.href = data.url;
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err.message);
+      setCheckingOut(false);
+    }
   }
 
   function tabClass(tabName: string) {
@@ -288,11 +305,15 @@ export default function PricingSection({
               <Button
                 size="lg"
                 onClick={handleSubscribe}
-                disabled={proDisabled}
+                disabled={proDisabled || checkingOut}
                 className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
               >
-                <CreditCard className="mr-2 h-4 w-4" />
-                {proButtonText}
+                {checkingOut ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <CreditCard className="mr-2 h-4 w-4" />
+                )}
+                {checkingOut ? "Redirecting to Stripe..." : proButtonText}
               </Button>
             </div>
           </div>
