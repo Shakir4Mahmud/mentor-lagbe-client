@@ -18,6 +18,7 @@ MentorLagbe is a tuition and mentorship marketplace that connects students with 
 - [Payments (Stripe test mode)](#payments-stripe-test-mode)
 - [Scripts](#scripts)
 - [Deployment (Vercel)](#deployment-vercel)
+- [Production security checklist](#production-security-checklist)
 - [Troubleshooting](#troubleshooting)
 
 ---
@@ -186,6 +187,20 @@ These checks do not modify the database or call Stripe.
 4. When environment variables change, redeploy with **Use existing build cache** unchecked.
 
 > The Express server cannot run on Vercel as a long-lived process; deploy it on Render (see the server README).
+
+---
+
+## Production security checklist
+
+Before exposing the app to real users:
+
+1. **Never use `NEXT_PUBLIC_` for secrets.** Only `NEXT_PUBLIC_API_URL` is public. `IMGBB_KEY` is read only inside `src/app/api/upload-image/route.ts`, which checks the Better Auth session before uploading.
+2. **Rotate exposed credentials.** If a secret was ever committed or shipped with a `NEXT_PUBLIC_` prefix, treat it as compromised: create a new ImgBB key, set it as `IMGBB_KEY` in Vercel, then delete the old `NEXT_PUBLIC_IMGBB_KEY`.
+3. **Rotate `BETTER_AUTH_SECRET` and `JWT_SECRET`.** Changing `BETTER_AUTH_SECRET` invalidates all existing sessions (users sign in again). `JWT_SECRET` must be changed in **Vercel and Render at the same time**, otherwise authenticated API calls fail.
+4. **Rotate the MongoDB password** and update `MONGODB_URI` in both Vercel and Render together.
+5. **Do not publish admin credentials** in this repository or in any public documentation. Keep them in a secret manager and submit them only through the private assignment channel.
+6. **Separate environments.** Use different secrets and a different database for Preview/Staging and Production. Test destructive changes in staging first.
+7. **Keep dependencies patched.** Run `npm audit` regularly and update Next.js/Better Auth when security fixes are released.
 
 ---
 
