@@ -16,6 +16,12 @@ const accountLinks = [
   { name: "Dashboard", href: "/dashboard/profile" },
 ];
 
+const legalLinks = [
+  { name: "Privacy Policy", href: "/privacy" },
+  { name: "Terms & Conditions", href: "/terms" },
+  { name: "Refund Policy", href: "/refund" },
+];
+
 const socialLinks = [
   { name: "X", href: "https://x.com", icon: FaXTwitter },
   { name: "Facebook", href: "https://facebook.com", icon: FaFacebookF },
@@ -28,7 +34,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#06191a] text-white">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-5">
         {/* Brand */}
         <div className="space-y-4">
           <div className="[&_a>span:nth-child(2)]:text-white">
@@ -85,6 +91,20 @@ export default function Footer() {
           </ul>
         </div>
 
+        {/* Legal */}
+        <div>
+          <h3 className="mb-4 text-lg font-semibold">Legal</h3>
+          <ul className="space-y-2 text-sm text-white/70">
+            {legalLinks.map((link) => (
+              <li key={link.name}>
+                <Link href={link.href} className="transition hover:text-accent">
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {/* Contact */}
         <div>
           <h3 className="mb-4 text-lg font-semibold">Contact</h3>
@@ -95,11 +115,16 @@ export default function Footer() {
             </li>
             <li className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-accent" />
-              +880 1700 000000
+              <a
+                href="tel:01747740061"
+                className="transition hover:text-accent"
+              >
+                01747740061
+              </a>
             </li>
             <li className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-accent" />
-              Dhaka, Bangladesh
+              Jamalpur, Bangladesh
             </li>
           </ul>
         </div>

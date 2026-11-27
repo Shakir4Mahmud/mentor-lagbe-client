@@ -45,7 +45,7 @@ const plans: Record<string, PlanInfo> = {
     ],
   },
   tutor: {
-    price: 499,
+    price: 199,
     proTitle: "Pro Tutor",
     freeFeatures: [
       "Post up to 2 tuitions",
@@ -63,6 +63,10 @@ const plans: Record<string, PlanInfo> = {
   },
 };
 
+// Build-time public flag: hide SSLCommerz until its server keys are configured.
+const sslcommerzEnabled =
+  process.env.NEXT_PUBLIC_SSLCOMMERZ_ENABLED === "true";
+
 type PricingSectionProps = {
   withHeading?: boolean;
 };
@@ -76,6 +80,9 @@ export default function PricingSection({
   // user nijer click korle ekhane save hobe, na korle null thakbe
   const [chosenAudience, setChosenAudience] = useState<string | null>(null);
   const [checkingOut, setCheckingOut] = useState(false);
+  const [activeGateway, setActiveGateway] = useState<"stripe" | "ssl">(
+    "stripe"
+  );
 
   // login kora user er role ar plan
   const user = session?.user;
@@ -103,7 +110,7 @@ export default function PricingSection({
   const plan = plans[audience];
 
   // Pro button er text ar disabled state
-  let proButtonText = "Subscribe with Stripe";
+  let proButtonText = "Subscribe with Stripe (test)";
   let proDisabled = false;
 
   if (user) {
@@ -119,22 +126,26 @@ export default function PricingSection({
     }
   }
 
-  async function handleSubscribe() {
+  async function handleSubscribe(gateway: "stripe" | "ssl") {
     // login na thakle sign in e pathao, login er por abar pricing e ashbe
     if (!user) {
       router.push("/sign-in?redirect=/pricing");
       return;
     }
 
+    setActiveGateway(gateway);
     setCheckingOut(true);
 
     try {
-      const data = await apiFetch<{ url: string }>(
-        "/api/payments/create-checkout-session",
-        { method: "POST" }
-      );
+      const endpoint =
+        gateway === "ssl"
+          ? "/api/payments/ssl/create"
+          : "/api/payments/create-checkout-session";
 
-      // Stripe er payment page e niye jabo
+      const data = await apiFetch<{ url: string }>(endpoint, {
+        method: "POST",
+      });
+
       window.location.href = data.url;
     } catch (error) {
       const err = error as Error;
@@ -284,7 +295,9 @@ export default function PricingSection({
               <span className="font-heading text-5xl font-bold">
                 {plan.price}
               </span>
-              <span className="mb-1 text-sm text-white/70">BDT / month</span>
+              <span className="mb-1 text-sm text-white/70">
+                BDT / one-time
+              </span>
             </div>
 
             <ul className="relative mt-8 flex-1 space-y-3">
@@ -301,20 +314,62 @@ export default function PricingSection({
               ))}
             </ul>
 
-            <div className="relative mt-8">
-              <Button
-                size="lg"
-                onClick={handleSubscribe}
-                disabled={proDisabled || checkingOut}
-                className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
-              >
-                {checkingOut ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <CreditCard className="mr-2 h-4 w-4" />
-                )}
-                {checkingOut ? "Redirecting to Stripe..." : proButtonText}
-              </Button>
+            <div className="relative mt-8 space-y-3">
+              {proDisabled ? (
+                <Button
+                  size="lg"
+                  disabled
+                  className="w-full rounded-full bg-accent text-accent-foreground"
+                >
+                  {proButtonText}
+                </Button>
+              ) : sslcommerzEnabled ? (
+                <>
+                  <Button
+                    size="lg"
+                    onClick={() => handleSubscribe("ssl")}
+                    disabled={checkingOut}
+                    className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
+                  >
+                    {checkingOut && activeGateway === "ssl" ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <CreditCard className="mr-2 h-4 w-4" />
+                    )}
+                    Pay with SSLCommerz
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={() => handleSubscribe("stripe")}
+                    disabled={checkingOut}
+                    className="w-full rounded-full border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                  >
+                    {checkingOut && activeGateway === "stripe" ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <CreditCard className="mr-2 h-4 w-4" />
+                    )}
+                    Pay with Stripe (test)
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  size="lg"
+                  onClick={() => handleSubscribe("stripe")}
+                  disabled={checkingOut}
+                  className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
+                >
+                  {checkingOut ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <CreditCard className="mr-2 h-4 w-4" />
+                  )}
+                  {checkingOut
+                    ? "Redirecting to Stripe..."
+                    : proButtonText}
+                </Button>
+              )}
             </div>
           </div>
         </motion.div>
@@ -322,7 +377,9 @@ export default function PricingSection({
 
       <p className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
         <Lock className="h-4 w-4" />
-        Secure payment powered by Stripe
+        {sslcommerzEnabled
+          ? "Secure payments powered by SSLCommerz and Stripe (test mode)"
+          : "Secure payment powered by Stripe (test mode)"}
       </p>
     </section>
   );

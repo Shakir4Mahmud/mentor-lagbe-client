@@ -17,7 +17,8 @@ MentorLagbe is a tuition and mentorship marketplace that connects students with 
 - [Email & account recovery](#email--account-recovery)
 - [Google sign-in (optional)](#google-sign-in-optional)
 - [API integration](#api-integration)
-- [Payments (Stripe test mode)](#payments-stripe-test-mode)
+- [Payments (Stripe + SSLCommerz)](#payments-stripe--sslcommerz)
+- [Legal pages](#legal-pages)
 - [Scripts](#scripts)
 - [Deployment (Vercel)](#deployment-vercel)
 - [Production security checklist](#production-security-checklist)
@@ -34,7 +35,7 @@ MentorLagbe is a tuition and mentorship marketplace that connects students with 
 | Auth | Better Auth with MongoDB adapter (email/password + sessions) |
 | Data | MongoDB Atlas (shared with the Express server) |
 | Notifications | Sonner (global toaster, bottom-right) |
-| Payments | Stripe Checkout (redirect flow, test mode) |
+| Payments | Stripe Checkout (test mode) + SSLCommerz (sandbox by default) |
 | Hosting | Vercel |
 
 ---
@@ -101,6 +102,7 @@ Copy `.env.example` to `.env.local` and fill in the values.
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID (optional social login) | — |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | — |
 | `NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED` | Public UI flag — set `true` to show Google buttons (inlined at build time) | `false` |
+| `NEXT_PUBLIC_SSLCOMMERZ_ENABLED` | Public UI flag — set `true` to show the SSLCommerz button (inlined at build time) | `false` |
 
 > Image uploads go through `POST /api/upload-image`: the client sends only the file, the server verifies the Better Auth session and calls ImgBB with `IMGBB_KEY`. The key is never present in the browser bundle.
 
@@ -194,17 +196,31 @@ All API paths are relative to `NEXT_PUBLIC_API_URL`. Examples: `/api/tuitions`, 
 
 ---
 
-## Payments (Stripe test mode)
+## Payments (Stripe + SSLCommerz)
 
-1. Pricing page shows **Pro Student — 99 BDT** and **Pro Tutor — 499 BDT**.
-2. Client calls `POST /api/payments/create-checkout-session` (no amount is sent).
-3. The server derives the price from the authenticated user's role and returns a Stripe Checkout URL.
-4. After payment, Stripe redirects to `/payment/success?session_id=…`.
-5. `PaymentSuccess` calls `POST /api/payments/verify`; the server retrieves the session from Stripe, checks the email and `payment_status`, records the payment and upgrades the plan.
+Pricing page shows **Pro Student — 99 BDT** and **Pro Tutor — 199 BDT**, billed as a one-time activation (not a recurring subscription). The client never sends an amount; the server derives it from the signed-in user's role.
 
-The project uses a **`sk_test_…` key**. Test card: `4242 4242 4242 4242` with any future expiry and CVC.
+### Stripe (test mode)
 
-> There is no Stripe webhook yet; plan activation relies on the client reaching the success page.
+1. Client calls `POST /api/payments/create-checkout-session` with no amount.
+2. Server returns a Stripe Checkout URL using `sk_test_…`.
+3. Success redirects to `/payment/success?session_id=…`; `PaymentSuccess` calls `POST /api/payments/verify` and the server activates Pro.
+4. Test card: `4242 4242 4242 4242`, any future expiry, CVC `123`. No real money is charged.
+
+> No Stripe webhook yet — activation relies on the browser reaching the success page.
+
+### SSLCommerz (sandbox by default)
+
+1. Set `NEXT_PUBLIC_SSLCOMMERZ_ENABLED=true` here and the store keys on the server, then redeploy both. The SSLCommerz button stays hidden until then.
+2. Client calls `POST /api/payments/ssl/create`; server stores a `pending` payment and returns the gateway URL.
+3. Success redirects to `/payment/ssl-success?tran_id=…&val_id=…`; the page calls `POST /api/payments/ssl/validate`.
+4. The server verifies `val_id` against the gateway, checks amount/currency/email, records the payment and activates Pro. The gateway IPN does the same server-to-server, and both paths are idempotent.
+
+---
+
+## Legal pages
+
+Public routes `/privacy`, `/terms` and `/refund` are linked in the footer. They explain data use, account rules, Pro pricing and refund requests. Contact details shown there and in the footer: **support@mentorlagbe.com**, **01747740061**, **Jamalpur, Bangladesh**.
 
 ---
 
