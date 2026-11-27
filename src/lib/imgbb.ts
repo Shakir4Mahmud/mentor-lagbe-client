@@ -1,23 +1,29 @@
+// Client-side helper. Key never reaches the browser — the server route
+// /api/upload-image owns the ImgBB credential and performs the upload.
 export async function uploadToImgbb(file: File): Promise<string> {
-  const apiKey = process.env.NEXT_PUBLIC_IMGBB_KEY;
-
-  if (!apiKey) {
-    throw new Error("ImgBB key is missing in .env.local");
-  }
-
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("file", file);
 
-  const res = await fetch("https://api.imgbb.com/1/upload?key=" + apiKey, {
-    method: "POST",
-    body: formData,
-  });
-
-  const data = await res.json();
-
-  if (!res.ok || !data.success) {
+  let res: Response;
+  try {
+    res = await fetch("/api/upload-image", {
+      method: "POST",
+      body: formData,
+    });
+  } catch {
     throw new Error("Image upload failed. Please try again.");
   }
 
-  return data.data.url as string;
+  let data: { url?: string; message?: string } = {};
+  try {
+    data = (await res.json()) as { url?: string; message?: string };
+  } catch {
+    // non-JSON error response
+  }
+
+  if (!res.ok || !data.url) {
+    throw new Error(data.message || "Image upload failed. Please try again.");
+  }
+
+  return data.url;
 }

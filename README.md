@@ -61,7 +61,8 @@ src/
 │   ├── dashboard/           # Protected layouts + student/tutor/admin sections
 │   ├── api/
 │   │   ├── auth/[...all]/   # Better Auth catch-all handler
-│   │   └── token/           # Session → short-lived JWT for the Express API
+│   │   ├── token/           # Session → short-lived JWT for the Express API
+│   │   └── upload-image/    # Auth-gated ImgBB proxy (key stays server-side)
 │   ├── error.tsx
 │   ├── not-found.tsx
 │   └── layout.tsx           # Root layout + global Toaster
@@ -73,7 +74,7 @@ src/
 │   ├── session.ts           # getCurrentUser / requireRole
 │   ├── dashboard-path.ts    # role → dashboard path + redirect sanitizer
 │   ├── dashboard-nav.ts     # role-based navigation config
-│   └── imgbb.ts             # image upload helper
+│   └── imgbb.ts             # client helper → /api/upload-image
 ├── proxy.ts                 # Next.js 16 proxy: cookie gate for /dashboard, /payment
 └── types/                   # Shared TypeScript types
 ```
@@ -91,7 +92,9 @@ Copy `.env.example` to `.env.local` and fill in the values.
 | `BETTER_AUTH_URL` | Canonical client origin used by Better Auth | `http://localhost:3000` / Vercel URL |
 | `JWT_SECRET` | Must match the server's `JWT_SECRET` | 64 random characters |
 | `NEXT_PUBLIC_API_URL` | Base URL of the Express server | `http://localhost:5000` / Render URL |
-| `NEXT_PUBLIC_IMGBB_KEY` | ImgBB API key for image uploads | — |
+| `IMGBB_KEY` | ImgBB API key — **server-only**, must not use the `NEXT_PUBLIC_` prefix | — |
+
+> Image uploads go through `POST /api/upload-image`: the client sends only the file, the server verifies the Better Auth session and calls ImgBB with `IMGBB_KEY`. The key is never present in the browser bundle.
 
 > The server requires its own variables (`STRIPE_SECRET_KEY`, `CLIENT_URL`, etc.). See the server README.
 
