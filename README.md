@@ -14,6 +14,7 @@ MentorLagbe is a tuition and mentorship marketplace that connects students with 
 - [Environment variables](#environment-variables)
 - [Local development](#local-development)
 - [Authentication & authorization](#authentication--authorization)
+- [Email & account recovery](#email--account-recovery)
 - [API integration](#api-integration)
 - [Payments (Stripe test mode)](#payments-stripe-test-mode)
 - [Scripts](#scripts)
@@ -94,6 +95,8 @@ Copy `.env.example` to `.env.local` and fill in the values.
 | `JWT_SECRET` | Must match the server's `JWT_SECRET` | 64 random characters |
 | `NEXT_PUBLIC_API_URL` | Base URL of the Express server | `http://localhost:5000` / Render URL |
 | `IMGBB_KEY` | ImgBB API key — **server-only**, must not use the `NEXT_PUBLIC_` prefix | — |
+| `RESEND_API_KEY` | Resend API key for verification and password-reset emails | `re_…` |
+| `EMAIL_FROM` | Verified sender address | `MentorLagbe <onboarding@resend.dev>` |
 
 > Image uploads go through `POST /api/upload-image`: the client sends only the file, the server verifies the Better Auth session and calls ImgBB with `IMGBB_KEY`. The key is never present in the browser bundle.
 
@@ -134,6 +137,24 @@ Default local ports: client `3000`, API `5000`. Make sure `NEXT_PUBLIC_API_URL` 
 - `RoleGuard` and the dashboard layout enforce roles again on the server.
 - `proxy.ts` only checks for the presence of the session cookie; real validation happens in server components.
 - `/api/token` exchanges a valid Better Auth session for a 1-hour JWT (`{ email, name }`). The Express server verifies the JWT and reads the **role from MongoDB**, never from the token.
+- Rate limiting is enabled (`rateLimit`): sign-in/sign-up are limited to 3 requests per 10 seconds; password-reset and verification-email requests to 3 per 60 seconds.
+
+---
+
+## Email & account recovery
+
+Better Auth sends two kinds of email through Resend (server-side only):
+
+| Flow | Pages | Behaviour |
+|---|---|---|
+| Forgot password | `/forgot-password`, `/reset-password?token=…` | One-time token, 15-minute expiry, all existing sessions revoked on reset, generic response so emails cannot be enumerated |
+| Email verification | `/verify-email` | Verification email sent on sign-up, 15-minute expiry, auto sign-in after verification |
+
+> **`requireEmailVerification` is intentionally NOT enabled.** Existing accounts were created without verification, so gating sign-in would lock them out. Enable it only after every user has been verified/backfilled. Verification currently informs users and lets them resend the link.
+
+Resend setup: create an API key, use `onboarding@resend.dev` as `EMAIL_FROM` while testing, then verify your own domain (SPF/DKIM) before production.
+
+If `RESEND_API_KEY` is missing or the provider fails, the send is skipped with a server-side warning so sign-up and password-reset endpoints never return a 500. Set up monitoring to catch these warnings in production.
 
 ---
 

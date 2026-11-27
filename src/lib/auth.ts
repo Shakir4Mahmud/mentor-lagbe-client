@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
+import { passwordResetEmail, sendEmail, verificationEmail } from "./email";
 
 export type AuthInstance = ReturnType<typeof createAuthInstance>;
 
@@ -31,7 +32,34 @@ function createAuthInstance(client: MongoClient) {
     emailAndPassword: {
       enabled: true,
       minPasswordLength: 6,
+      resetPasswordTokenExpiresIn: 15 * 60,
+      revokeSessionsOnPasswordReset: true,
+      // requireEmailVerification intentionally NOT enabled: existing users must
+      // not be locked out. Verification emails are informational only for now.
+      sendResetPassword: async ({ user, url }) => {
+        await sendEmail({
+          to: user.email,
+          subject: "Reset your MentorLagbe password",
+          html: passwordResetEmail(user.name, url),
+        });
+      },
     },
+
+    emailVerification: {
+      sendOnSignUp: true,
+      autoSignInAfterVerification: true,
+      expiresIn: 15 * 60,
+      sendVerificationEmail: async ({ user, url }) => {
+        await sendEmail({
+          to: user.email,
+          subject: "Verify your MentorLagbe email",
+          html: verificationEmail(user.name, url),
+        });
+      },
+    },
+
+    // Built-in rules: sign-in/sign-up 3 per 10s, reset/resend 3 per 60s.
+    rateLimit: { enabled: true },
 
     user: {
       modelName: "users",
