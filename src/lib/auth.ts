@@ -26,8 +26,22 @@ const globalForAuth = globalThis as unknown as {
 function createAuthInstance(client: MongoClient) {
   const db = client.db();
 
+  const googleConfig =
+    process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+      ? {
+          google: {
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          },
+        }
+      : undefined;
+
   return betterAuth({
     database: mongodbAdapter(db, { client }),
+
+    // Added only when both env vars exist, so a deploy before the keys are set
+    // never breaks the rest of the auth endpoints.
+    ...(googleConfig ? { socialProviders: { ...googleConfig } } : {}),
 
     emailAndPassword: {
       enabled: true,
@@ -89,11 +103,21 @@ function createAuthInstance(client: MongoClient) {
     databaseHooks: {
       user: {
         create: {
-          before: async (user) => {
+          before: async (user, context) => {
             // sudhu student ba tutor role allow, admin hote dibo na
             let safeRole = "student";
             if (user.role === "tutor") {
               safeRole = "tutor";
+            } else if (!user.role) {
+              // Google profile-e role thake na. Sign-up page-e button chapar
+              // age short-lived cookie-e choice rakhi, hook eta read kore.
+              const cookieHeader = context?.request?.headers?.get("cookie") || "";
+              const hasTutorRole = cookieHeader
+                .split(";")
+                .some((part) => part.trim() === "ml_google_role=tutor");
+              if (hasTutorRole) {
+                safeRole = "tutor";
+              }
             }
 
             const newUser = {

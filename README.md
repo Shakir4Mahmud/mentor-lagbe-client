@@ -15,6 +15,7 @@ MentorLagbe is a tuition and mentorship marketplace that connects students with 
 - [Local development](#local-development)
 - [Authentication & authorization](#authentication--authorization)
 - [Email & account recovery](#email--account-recovery)
+- [Google sign-in (optional)](#google-sign-in-optional)
 - [API integration](#api-integration)
 - [Payments (Stripe test mode)](#payments-stripe-test-mode)
 - [Scripts](#scripts)
@@ -97,6 +98,9 @@ Copy `.env.example` to `.env.local` and fill in the values.
 | `IMGBB_KEY` | ImgBB API key — **server-only**, must not use the `NEXT_PUBLIC_` prefix | — |
 | `RESEND_API_KEY` | Resend API key for verification and password-reset emails | `re_…` |
 | `EMAIL_FROM` | Verified sender address | `MentorLagbe <onboarding@resend.dev>` |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID (optional social login) | — |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | — |
+| `NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED` | Public UI flag — set `true` to show Google buttons (inlined at build time) | `false` |
 
 > Image uploads go through `POST /api/upload-image`: the client sends only the file, the server verifies the Better Auth session and calls ImgBB with `IMGBB_KEY`. The key is never present in the browser bundle.
 
@@ -155,6 +159,25 @@ Better Auth sends two kinds of email through Resend (server-side only):
 Resend setup: create an API key, use `onboarding@resend.dev` as `EMAIL_FROM` while testing, then verify your own domain (SPF/DKIM) before production.
 
 If `RESEND_API_KEY` is missing or the provider fails, the send is skipped with a server-side warning so sign-up and password-reset endpoints never return a 500. Set up monitoring to catch these warnings in production.
+
+---
+
+## Google sign-in (optional)
+
+1. Google Cloud Console → create a project → configure the **OAuth consent screen**.
+2. Create an **OAuth client ID** of type *Web application*.
+3. Add this exact authorized redirect URI:
+   ```
+   https://mentor-lagbe-iota.vercel.app/api/auth/callback/google
+   ```
+   For local development also add `http://localhost:3000/api/auth/callback/google`.
+4. Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` and `NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED=true` in Vercel. `BETTER_AUTH_URL` must exactly match the site origin.
+5. Deploy. The Google buttons **and their "OR" separator** appear only when the public flag is `true`; the auth config is built conditionally, so a deploy without the keys does not break email/password auth. For local testing, mirror all three values in `.env.local` and restart the dev server.
+
+### Role handling
+
+- Google profiles do not contain a role. The sign-up page offers two buttons — **Continue as Student** and **Continue as Tutor** — which set a short-lived cookie read by the `user.create.before` database hook. A newly created Google user therefore gets the chosen role (`student` by default). Admin is never assignable this way.
+- Existing users linking Google keep their current MongoDB role. Their `emailVerified` must be `true`, otherwise Better Auth returns `account_not_linked` (by design, to prevent account takeover). Set it for trusted existing accounts before asking them to use Google.
 
 ---
 

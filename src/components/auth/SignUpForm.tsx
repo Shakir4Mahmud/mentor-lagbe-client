@@ -8,6 +8,9 @@ import { Eye, EyeOff, GraduationCap, BookOpen, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { roleDashboardPath } from "@/lib/dashboard-path";
+import GoogleSignInButton, {
+  googleLoginEnabled,
+} from "@/components/auth/GoogleSignInButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -214,6 +217,21 @@ export default function SignUpForm() {
           {loading ? "Creating account..." : "Create Account"}
         </Button>
       </form>
+
+      {googleLoginEnabled && (
+        <>
+          <div className="my-6 flex items-center gap-3">
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-xs text-muted-foreground">OR</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+
+          <div className="space-y-3">
+            <GoogleSignInButton role="student" label="Continue as Student" />
+            <GoogleSignInButton role="tutor" label="Continue as Tutor" />
+          </div>
+        </>
+      )}
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Already have an account?{" "}

@@ -8,6 +8,9 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { roleDashboardPath, safeRedirectPath } from "@/lib/dashboard-path";
+import GoogleSignInButton, {
+  googleLoginEnabled,
+} from "@/components/auth/GoogleSignInButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -158,6 +161,18 @@ export default function SignInForm() {
           {loading ? "Signing in..." : "Sign In"}
         </Button>
       </form>
+
+      {googleLoginEnabled && (
+        <>
+          <div className="my-6 flex items-center gap-3">
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-xs text-muted-foreground">OR</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+
+          <GoogleSignInButton />
+        </>
+      )}
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         New to MentorLagbe?{" "}
