@@ -27,7 +27,7 @@ async function SubjectsAndStatsContent() {
         <SectionHeading
           eyebrow="Top Subjects"
           title="Explore tuitions by subject"
-          subtitle="From school subjects to IELTS and programming, find the right mentor for what you want to learn."
+          subtitle="From Arts and Commerce to Science and school subjects, find the right mentor for what you want to learn."
         />
 
         <div className="mt-12">
@@ -46,7 +46,7 @@ async function SubjectsAndStatsContent() {
 }
 
 function SubjectsAndStatsLoading() {
-  const items = [1, 2, 3, 4, 5, 6, 7, 8];
+  const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">

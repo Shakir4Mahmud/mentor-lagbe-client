@@ -21,10 +21,10 @@ const headlineWords = [
 ];
 
 const popularSubjects = [
-  { label: "Mathematics", value: "Mathematics" },
+  { label: "Bangla", value: "Bangla" },
+  { label: "English", value: "English" },
+  { label: "ICT", value: "ICT" },
   { label: "Physics", value: "Physics" },
-  { label: "Programming", value: "Programming" },
-  { label: "IELTS", value: "IELTS" },
 ];
 
 const trustPoints = [

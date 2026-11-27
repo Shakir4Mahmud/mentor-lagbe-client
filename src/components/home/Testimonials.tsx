@@ -21,7 +21,7 @@ const testimonials: Testimonial[] = [
   },
   {
     name: "Tanvir Ahmed",
-    role: "Tutor, Programming",
+    role: "Tutor, ICT",
     text: "Posting my batch took five minutes. After approval I received applications from serious students right away.",
     rating: 5,
   },
@@ -33,7 +33,7 @@ const testimonials: Testimonial[] = [
   },
   {
     name: "Farhana Akter",
-    role: "Tutor, IELTS",
+    role: "Tutor, English",
     text: "The dashboard makes it easy to manage applicants. Accepting or rejecting a student is just one click.",
     rating: 5,
   },

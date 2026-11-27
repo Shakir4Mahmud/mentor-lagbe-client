@@ -1,12 +1,15 @@
 export const subjectOptions = [
-  "Mathematics",
+  "Arts",
+  "Commerce",
+  "Science",
+  "Bangla",
+  "English",
+  "ICT",
   "Physics",
   "Chemistry",
+  "Higher Math",
   "Biology",
-  "Programming",
-  "English",
-  "IELTS",
-  "Science",
+  "Mathematics",
 ];
 
 export const classLevelOptions = [

@@ -3,14 +3,17 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import {
-  Sigma,
-  Atom,
-  Code,
-  Globe,
-  FlaskConical,
-  Dna,
-  BookText,
+  Palette,
+  BriefcaseBusiness,
   Microscope,
+  BookText,
+  Globe,
+  Monitor,
+  Atom,
+  FlaskConical,
+  Sigma,
+  Dna,
+  BookOpen,
   ArrowUpRight,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -22,14 +25,17 @@ type SubjectItem = {
 };
 
 const subjectList: SubjectItem[] = [
-  { name: "Mathematics", icon: Sigma },
-  { name: "Physics", icon: Atom },
-  { name: "Programming", icon: Code },
-  { name: "IELTS", icon: Globe },
-  { name: "Chemistry", icon: FlaskConical },
-  { name: "Biology", icon: Dna },
-  { name: "English", icon: BookText },
+  { name: "Arts", icon: Palette },
+  { name: "Commerce", icon: BriefcaseBusiness },
   { name: "Science", icon: Microscope },
+  { name: "Bangla", icon: BookText },
+  { name: "English", icon: Globe },
+  { name: "ICT", icon: Monitor },
+  { name: "Physics", icon: Atom },
+  { name: "Chemistry", icon: FlaskConical },
+  { name: "Higher Math", icon: Sigma },
+  { name: "Biology", icon: Dna },
+  { name: "Mathematics", icon: BookOpen },
 ];
 
 type SubjectsGridProps = {

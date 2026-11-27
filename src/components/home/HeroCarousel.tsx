@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { ShieldCheck, Star, CheckCircle2, Video } from "lucide-react";
+import { CheckCircle2, Video } from "lucide-react";
 import type { HeroCard } from "@/lib/heroCards";
 
 type HeroCarouselProps = {
@@ -83,7 +84,6 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
           // active card theke koto dure ache (-2, -1, 0, 1, 2)
           const offset = ((index - active + total + half) % total) - half;
           const distance = Math.abs(offset);
-          const isActive = offset === 0;
 
           let zIndex = 10 - distance;
           if (zIndex < 0) {
@@ -111,7 +111,6 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
           return (
             <motion.div
               key={card.id}
-              onClick={() => setActive(index)}
               initial={false}
               animate={{
                 x: offset * spread,
@@ -146,13 +145,13 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
               <div className="absolute bottom-0 h-[66%] w-full">
                 {/* Fallback initials (image na ashle eta dekha jabe) */}
                 <div className="absolute inset-0 flex items-center justify-center text-6xl font-bold text-[#0b2e2b]/20">
-                  {getInitials(card.tutorName)}
+                  {getInitials(card.subject)}
                 </div>
 
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={card.image}
-                  alt={card.tutorName}
+                  alt={card.subject}
                   className="absolute inset-0 h-full w-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
@@ -171,33 +170,13 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
                 />
               </div>
 
-              {/* Info strip (sudhu majhkhaner card e) */}
-              {isActive && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.25 }}
-                  className="absolute inset-x-3 bottom-3 z-10 flex items-center justify-between rounded-2xl bg-white/85 p-3 text-[#10231f] backdrop-blur"
-                >
-                  <div>
-                    <div className="flex items-center gap-1">
-                      <p className="text-sm font-semibold">{card.tutorName}</p>
-                      <ShieldCheck className="h-3.5 w-3.5 text-[#0f5c57]" />
-                    </div>
-                    <div className="mt-0.5 flex items-center gap-1 text-xs text-slate-600">
-                      <Star className="h-3 w-3 fill-[#d4a24c] text-[#d4a24c]" />
-                      {card.rating.toFixed(1)}
-                    </div>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-[#0f5c57]">
-                      {card.fee.toLocaleString("en-US")} BDT
-                    </p>
-                    <p className="text-[10px] text-slate-500">per month</p>
-                  </div>
-                </motion.div>
-              )}
+              {/* Pura card clickable — oi category-r tuitions-e jabe */}
+              <Link
+                href={"/tuitions?subject=" + encodeURIComponent(card.subject)}
+                onClick={() => setActive(index)}
+                aria-label={"Browse " + card.subject + " tuitions"}
+                className="absolute inset-0 z-20"
+              />
             </motion.div>
           );
         })}
