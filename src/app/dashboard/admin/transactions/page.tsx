@@ -1,4 +1,3 @@
-import AdminBkashApprovals from "@/components/dashboard/AdminBkashApprovals";
 import AdminTransactions from "@/components/dashboard/AdminTransactions";
 
 export default function AdminTransactionsPage() {
@@ -9,8 +8,7 @@ export default function AdminTransactionsPage() {
         Every Pro subscription payment made through Stripe or bKash.
       </p>
 
-      <div className="mt-8 space-y-6">
-        <AdminBkashApprovals />
+      <div className="mt-8">
         <AdminTransactions />
       </div>
     </div>

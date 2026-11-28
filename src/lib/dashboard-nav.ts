@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  CheckCircle2,
   FileText,
   GraduationCap,
   Heart,
@@ -105,6 +106,11 @@ export const dashboardNav: Record<DashboardRole, DashboardNavGroup[]> = {
           label: "Transactions",
           href: "/dashboard/admin/transactions",
           icon: Wallet,
+        },
+        {
+          label: "bKash Approvals",
+          href: "/dashboard/admin/bkash",
+          icon: CheckCircle2,
         },
       ],
     },

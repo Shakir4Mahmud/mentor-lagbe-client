@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent } from "react";
 import { motion } from "motion/react";
-import { CheckCircle2, Video } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, Video } from "lucide-react";
 import type { HeroCard } from "@/lib/heroCards";
 
 type HeroCarouselProps = {
@@ -65,6 +65,16 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
     };
   }, []);
 
+  // Shared by drag, dots and the laptop arrow buttons.
+  function changeCard(direction: -1 | 1) {
+    setActive((current) => {
+      if (direction === 1) {
+        return (current + 1) % total;
+      }
+      return (current - 1 + total) % total;
+    });
+  }
+
   // A short left/right drag moves to the next/previous card. The existing
   // animation stays exactly the same — only the active index changes.
   function finishDrag(endX: number) {
@@ -81,12 +91,7 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
     }
 
     didDrag.current = true;
-    setActive((current) => {
-      if (delta < 0) {
-        return (current + 1) % total;
-      }
-      return (current - 1 + total) % total;
-    });
+    changeCard(delta < 0 ? 1 : -1);
   }
 
   function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
@@ -131,6 +136,13 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
     finishDrag(event.clientX);
   }
 
+  // Arrows sit inside the drag area; keep their clicks separate from swipes.
+  function stopDrag(event: ReactPointerEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+    dragStartX.current = null;
+    didDrag.current = false;
+  }
+
   // A drag ends with a synthetic click on the card Link. Swallow only that
   // click so swiping never opens a tuition page by accident.
   function handleClickCapture(event: ReactMouseEvent<HTMLDivElement>) {
@@ -162,6 +174,27 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
     >
       {/* Glow behind cards */}
       <div className="absolute left-1/2 top-[45%] h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/25 blur-3xl" />
+
+      {/* Laptop/mouse arrows — hidden on phones and tablets where swipe is used */}
+      <button
+        type="button"
+        onClick={() => changeCard(-1)}
+        onPointerDown={stopDrag}
+        aria-label="Previous card"
+        className="absolute left-0 top-1/2 z-30 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/25 text-white shadow-lg backdrop-blur transition hover:bg-white/20 lg:flex"
+      >
+        <ChevronLeft className="h-5 w-5" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => changeCard(1)}
+        onPointerDown={stopDrag}
+        aria-label="Next card"
+        className="absolute right-0 top-1/2 z-30 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/25 text-white shadow-lg backdrop-blur transition hover:bg-white/20 lg:flex"
+      >
+        <ChevronRight className="h-5 w-5" />
+      </button>
 
       {/* Whole stack floats up and down */}
       <motion.div
