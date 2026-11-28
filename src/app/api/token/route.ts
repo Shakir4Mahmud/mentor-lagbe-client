@@ -21,6 +21,15 @@ export async function GET() {
       );
     }
 
+    // Unverified accounts cannot use the protected Express API, even if a
+    // session was created by a social provider.
+    if (!session.user.emailVerified) {
+      return NextResponse.json(
+        { message: "Please verify your email first" },
+        { status: 403, headers: noStore }
+      );
+    }
+
     const secret = process.env.JWT_SECRET;
     if (!secret) {
       console.error("JWT_SECRET is missing");

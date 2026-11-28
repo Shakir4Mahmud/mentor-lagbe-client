@@ -16,6 +16,10 @@ async function DashboardGuard({ children }: { children: React.ReactNode }) {
     redirect("/sign-in");
   }
 
+  if (!user.emailVerified) {
+    redirect("/verify-email");
+  }
+
   let role: DashboardUser["role"] = "student";
   if (user.role === "tutor" || user.role === "admin") {
     role = user.role;

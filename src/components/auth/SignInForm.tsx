@@ -70,15 +70,32 @@ export default function SignInForm() {
     const result = await authClient.signIn.email({
       email: email.trim(),
       password: password,
+      callbackURL: explicitRedirect ?? "/dashboard",
     });
 
     if (result.error) {
-      let message = "Invalid email or password";
-      if (result.error.message) {
-        message = result.error.message;
-      }
-      toast.error(message);
+      const error = result.error as {
+        message?: string;
+        code?: string;
+        status?: number;
+      };
+      const message = (error.message || "").toLowerCase();
+      const needsVerification =
+        error.code === "EMAIL_NOT_VERIFIED" ||
+        message.includes("not verified") ||
+        message.includes("verify your email");
+
       setLoading(false);
+
+      if (needsVerification) {
+        toast.error("Please verify your email before signing in.");
+        router.push(
+          "/verify-email?email=" + encodeURIComponent(email.trim())
+        );
+        return;
+      }
+
+      toast.error(error.message || "Invalid email or password");
       return;
     }
 

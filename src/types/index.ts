@@ -203,3 +203,29 @@ export type TransactionsResponse = {
   studentCount: number;
   tutorCount: number;
 };
+
+export type BkashStatus = "none" | "pending" | "approved" | "rejected";
+
+export type BkashPaymentRequest = {
+  _id: string;
+  userEmail: string;
+  userName: string;
+  userRole: string;
+  planName: string;
+  amount: number;
+  currency: string;
+  status: BkashStatus;
+  transactionId: string | null;
+  createdAt: string;
+  reviewedAt: string | null;
+  reviewedBy: string | null;
+};
+
+export type BkashStatusResponse = {
+  status: BkashStatus;
+  request: BkashPaymentRequest | null;
+};
+
+export type BkashPaymentsResponse = {
+  requests: BkashPaymentRequest[];
+};

@@ -10,7 +10,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="27 November 2026"
+      updated="28 November 2026"
       intro="MentorLagbe connects students with tutors. This policy explains what information we collect, why we need it, who can see it and how you can ask us to remove it."
       sections={[
         {
@@ -19,6 +19,7 @@ export default function PrivacyPage() {
             "Account details: name, email address, password hash, role (student, tutor or admin), profile bio and phone number if you add one.",
             "Activity: tuitions you post, applications you send, saved tuitions, reviews and messages related to a tuition.",
             "Payment details: plan, amount, currency, transaction ID and payment status. Full card numbers are handled by Stripe or SSLCommerz and never stored on our servers.",
+            "bKash requests: your name, email, chosen plan, amount and approval status. We do not collect your bKash PIN or app credentials.",
             "Technical data: IP address, browser type and request logs with a request ID, used to debug and secure the service.",
           ],
         },
@@ -27,7 +28,7 @@ export default function PrivacyPage() {
           bullets: [
             "To create and secure your account, and to show the correct student, tutor or admin dashboard.",
             "To match students with tutors and to let you manage applications and listings.",
-            "To activate a Pro plan after a successful payment and to show receipts in your account.",
+            "To activate a Pro plan after a successful payment or an approved bKash request, and to show receipts in your account.",
             "To send service emails such as password resets and email verification links.",
           ],
         },

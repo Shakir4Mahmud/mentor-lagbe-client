@@ -28,6 +28,10 @@ export async function requireRole(role: string) {
     redirect("/sign-in");
   }
 
+  if (!user.emailVerified) {
+    redirect("/verify-email");
+  }
+
   let userRole = "student";
   if (user.role) {
     userRole = user.role;

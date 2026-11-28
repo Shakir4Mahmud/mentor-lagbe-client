@@ -9,7 +9,7 @@ export default function RefundPage() {
   return (
     <LegalPage
       title="Refund & Cancellation Policy"
-      updated="27 November 2026"
+      updated="28 November 2026"
       intro="Pro access is a one-time payment. This policy explains when a payment can be cancelled or refunded and how to ask for one."
       sections={[
         {
@@ -23,6 +23,7 @@ export default function RefundPage() {
           heading: "2. Current payment modes",
           paragraphs: [
             "Stripe is currently used in test mode, so test card payments are simulated and do not move real money. SSLCommerz uses sandbox credentials until live store credentials are configured. If you see a real charge on your statement, contact us immediately with the transaction ID.",
+            "bKash payment is a manual Send Money method. Pro is activated only after an administrator approves your confirmation. If a request is rejected, no Pro access is granted.",
           ],
         },
         {
@@ -45,6 +46,7 @@ export default function RefundPage() {
           heading: "5. How to request",
           paragraphs: [
             "Email support@mentorlagbe.com or call 01747740061 with your account email, transaction ID and a short reason. We review requests within 3 working days. Approved refunds are sent back through the original payment method and may take 7–14 working days to appear, depending on your bank or provider.",
+            "For a bKash Send Money payment, include the date you sent the money and your account email. Approved bKash refunds are returned manually to the sender number.",
           ],
         },
         {

@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { apiFetch } from "@/lib/api";
+import BkashPayment from "@/components/payment/BkashPayment";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { Button } from "@/components/ui/button";
 
@@ -352,23 +353,27 @@ export default function PricingSection({
                     )}
                     Pay with Stripe (test)
                   </Button>
+                  <BkashPayment price={plan.price} />
                 </>
               ) : (
-                <Button
-                  size="lg"
-                  onClick={() => handleSubscribe("stripe")}
-                  disabled={checkingOut}
-                  className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
-                >
-                  {checkingOut ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <CreditCard className="mr-2 h-4 w-4" />
-                  )}
-                  {checkingOut
-                    ? "Redirecting to Stripe..."
-                    : proButtonText}
-                </Button>
+                <>
+                  <Button
+                    size="lg"
+                    onClick={() => handleSubscribe("stripe")}
+                    disabled={checkingOut}
+                    className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
+                  >
+                    {checkingOut ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <CreditCard className="mr-2 h-4 w-4" />
+                    )}
+                    {checkingOut
+                      ? "Redirecting to Stripe..."
+                      : proButtonText}
+                  </Button>
+                  <BkashPayment price={plan.price} />
+                </>
               )}
             </div>
           </div>

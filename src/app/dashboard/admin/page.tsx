@@ -1,4 +1,5 @@
 import AdminOverview from "@/components/dashboard/AdminOverview";
+import AdminBkashApprovals from "@/components/dashboard/AdminBkashApprovals";
 
 export default function AdminDashboardPage() {
   return (
@@ -8,7 +9,8 @@ export default function AdminDashboardPage() {
         Platform statistics, approvals and members at a glance.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-8 space-y-6">
+        <AdminBkashApprovals />
         <AdminOverview />
       </div>
     </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent } from "react";
 import { motion } from "motion/react";
 import { CheckCircle2, Video } from "lucide-react";
 import type { HeroCard } from "@/lib/heroCards";
@@ -23,6 +24,10 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [spread, setSpread] = useState(105);
+
+  // Pointer drag/swipe: same handler covers touch screens and mouse laptops.
+  const dragStartX = useRef<number | null>(null);
+  const didDrag = useRef(false);
 
   const total = cards.length;
   const half = Math.floor(total / 2);
@@ -60,13 +65,98 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
     };
   }, []);
 
+  // A short left/right drag moves to the next/previous card. The existing
+  // animation stays exactly the same — only the active index changes.
+  function finishDrag(endX: number) {
+    const startX = dragStartX.current;
+    dragStartX.current = null;
+
+    if (startX === null) {
+      return;
+    }
+
+    const delta = endX - startX;
+    if (Math.abs(delta) < 45) {
+      return;
+    }
+
+    didDrag.current = true;
+    setActive((current) => {
+      if (delta < 0) {
+        return (current + 1) % total;
+      }
+      return (current - 1 + total) % total;
+    });
+  }
+
+  function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.pointerType === "mouse" && event.button !== 0) {
+      return;
+    }
+
+    dragStartX.current = event.clientX;
+    didDrag.current = false;
+    setPaused(true);
+  }
+
+  function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    if (dragStartX.current === null) {
+      return;
+    }
+
+    if (Math.abs(event.clientX - dragStartX.current) > 8) {
+      didDrag.current = true;
+    }
+  }
+
+  function handlePointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    finishDrag(event.clientX);
+
+    // Mouse pause is handled by hover; touch needs the timer restarted here.
+    if (event.pointerType !== "mouse") {
+      setPaused(false);
+    }
+  }
+
+  function handlePointerCancel() {
+    dragStartX.current = null;
+    setPaused(false);
+  }
+
+  function handlePointerLeave(event: ReactPointerEvent<HTMLDivElement>) {
+    if (dragStartX.current === null) {
+      return;
+    }
+
+    finishDrag(event.clientX);
+  }
+
+  // A drag ends with a synthetic click on the card Link. Swallow only that
+  // click so swiping never opens a tuition page by accident.
+  function handleClickCapture(event: ReactMouseEvent<HTMLDivElement>) {
+    if (!didDrag.current) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    didDrag.current = false;
+  }
+
   if (total === 0) {
     return null;
   }
 
   return (
     <div
-      className="relative mx-auto w-full max-w-[600px]"
+      className="relative mx-auto w-full max-w-[600px] cursor-grab active:cursor-grabbing"
+      style={{ touchAction: "pan-y" }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerCancel}
+      onPointerLeave={handlePointerLeave}
+      onClickCapture={handleClickCapture}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

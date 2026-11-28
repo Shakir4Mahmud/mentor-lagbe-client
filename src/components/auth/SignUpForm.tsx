@@ -7,7 +7,6 @@ import { motion } from "motion/react";
 import { Eye, EyeOff, GraduationCap, BookOpen, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { roleDashboardPath } from "@/lib/dashboard-path";
 import GoogleSignInButton, {
   googleLoginEnabled,
 } from "@/components/auth/GoogleSignInButton";
@@ -84,6 +83,7 @@ export default function SignUpForm() {
       email: email.trim(),
       password: password,
       role: role,
+      callbackURL: "/dashboard",
     });
 
     if (result.error) {
@@ -96,13 +96,12 @@ export default function SignUpForm() {
       return;
     }
 
-    toast.success("Account created successfully!");
     setLoading(false);
 
-    // sign up er por sei role er dashboard e pathao
-    const newRole = result.data?.user?.role ?? role;
-
-    router.replace(roleDashboardPath(newRole));
+    // Verification is required before sign-in, so send the user to the
+    // verification page instead of straight to the dashboard.
+    toast.success("Account created. Please verify your email.");
+    router.replace("/verify-email?email=" + encodeURIComponent(email.trim()));
     router.refresh();
   }
 

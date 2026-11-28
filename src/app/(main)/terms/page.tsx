@@ -9,7 +9,7 @@ export default function TermsPage() {
   return (
     <LegalPage
       title="Terms & Conditions"
-      updated="27 November 2026"
+      updated="28 November 2026"
       intro="By creating an account or using MentorLagbe you agree to these terms. They are written for students, tutors and visitors using this website."
       sections={[
         {
@@ -22,6 +22,7 @@ export default function TermsPage() {
           heading: "2. Accounts and roles",
           bullets: [
             "One person should maintain one account. Sharing login credentials is not allowed.",
+            "You must verify your email address before you can sign in or use a dashboard. A new verification link can be requested at any time from the verification page.",
             "Roles are assigned at sign-up and can only be changed by an administrator. Google sign-in never grants an admin role.",
             "We may suspend accounts used for spam, harassment, fraud, fake qualifications or attempts to bypass platform rules.",
           ],
@@ -37,6 +38,8 @@ export default function TermsPage() {
           bullets: [
             "Pro Student costs 99 BDT and Pro Tutor costs 199 BDT. This is a one-time activation, not an auto-renewing subscription.",
             "Payments are processed by Stripe (currently in test mode) or SSLCommerz (sandbox by default). Your plan becomes active only after the payment is verified by the server.",
+            "bKash is a manual Send Money method, not an automated gateway. You send money to the account shown on the payment page, then submit a confirmation. Pro access is granted only after an administrator approves the request.",
+            "Submitting a bKash confirmation does not guarantee approval. Duplicate, fake or unconfirmed requests may be rejected.",
             "Prices and plan features may change, but a verified purchase keeps the Pro access already granted.",
           ],
         },

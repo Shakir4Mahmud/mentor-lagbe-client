@@ -48,8 +48,9 @@ function createAuthInstance(client: MongoClient) {
       minPasswordLength: 10,
       resetPasswordTokenExpiresIn: 15 * 60,
       revokeSessionsOnPasswordReset: true,
-      // requireEmailVerification intentionally NOT enabled: existing users must
-      // not be locked out. Verification emails are informational only for now.
+      // Email verification is enforced: sign-in is blocked until the address
+      // is confirmed. Unverified users can always resend from /verify-email.
+      requireEmailVerification: true,
       sendResetPassword: async ({ user, url }) => {
         await sendEmail({
           to: user.email,
@@ -61,6 +62,9 @@ function createAuthInstance(client: MongoClient) {
 
     emailVerification: {
       sendOnSignUp: true,
+      // If an unverified account tries to sign in, a fresh link is sent
+      // automatically so the user is never stuck without an email.
+      sendOnSignIn: true,
       autoSignInAfterVerification: true,
       expiresIn: 15 * 60,
       sendVerificationEmail: async ({ user, url }) => {
