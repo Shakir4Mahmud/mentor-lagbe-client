@@ -390,7 +390,7 @@ export default function AdminOverview() {
           <div>
             <h3 className="font-semibold">Recently joined</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              The newest members of MentorLagbe
+              The newest members of GuruLagbe
             </p>
           </div>
 

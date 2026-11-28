@@ -38,7 +38,7 @@ function layout(title: string, body: string): string {
       <p style="font-size:12px;color:#6b7280;margin:0;">
         If you did not request this, you can safely ignore this email.
       </p>
-      <p style="font-size:12px;color:#6b7280;margin:8px 0 0;">MentorLagbe</p>
+      <p style="font-size:12px;color:#6b7280;margin:8px 0 0;">GuruLagbe</p>
     </div>
   </div>`;
 }
@@ -53,7 +53,7 @@ export async function sendEmail(input: SendEmailInput): Promise<void> {
     return;
   }
 
-  const from = process.env.EMAIL_FROM || "MentorLagbe <onboarding@resend.dev>";
+  const from = process.env.EMAIL_FROM || "GuruLagbe <onboarding@resend.dev>";
 
   try {
     const { error } = await client.emails.send({
@@ -76,7 +76,7 @@ export async function sendEmail(input: SendEmailInput): Promise<void> {
 
 export function passwordResetEmail(name: string, url: string): string {
   return layout(
-    "Reset your MentorLagbe password",
+    "Reset your GuruLagbe password",
     `<p style="font-size:15px;line-height:1.6;color:#374151;">
       Hi ${escapeHtml(name || "there")}, we received a request to reset your password.
     </p>
@@ -91,7 +91,7 @@ export function passwordResetEmail(name: string, url: string): string {
 
 export function verificationEmail(name: string, url: string): string {
   return layout(
-    "Verify your MentorLagbe email",
+    "Verify your GuruLagbe email",
     `<p style="font-size:15px;line-height:1.6;color:#374151;">
       Hi ${escapeHtml(name || "there")}, please confirm your email address.
     </p>

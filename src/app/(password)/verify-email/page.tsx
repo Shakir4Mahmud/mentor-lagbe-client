@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/session";
 import ResendVerificationButton from "@/components/auth/ResendVerificationButton";
 
 export const metadata = {
-  title: "Verify Email | MentorLagbe",
+  title: "Verify Email | GuruLagbe",
 };
 
 async function VerifyEmailContent({

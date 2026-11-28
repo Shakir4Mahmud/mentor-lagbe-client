@@ -116,7 +116,7 @@ export default function HowItWorks() {
         <SectionHeading
           eyebrow="How It Works"
           title="Simple steps, whether you learn or teach"
-          subtitle="MentorLagbe connects students and tutors in a few easy steps."
+          subtitle="GuruLagbe connects students and tutors in a few easy steps."
         />
 
         {/* Tabs */}

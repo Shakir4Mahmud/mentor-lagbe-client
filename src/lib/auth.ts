@@ -54,7 +54,7 @@ function createAuthInstance(client: MongoClient) {
       sendResetPassword: async ({ user, url }) => {
         await sendEmail({
           to: user.email,
-          subject: "Reset your MentorLagbe password",
+          subject: "Reset your GuruLagbe password",
           html: passwordResetEmail(user.name, url),
         });
       },
@@ -70,7 +70,7 @@ function createAuthInstance(client: MongoClient) {
       sendVerificationEmail: async ({ user, url }) => {
         await sendEmail({
           to: user.email,
-          subject: "Verify your MentorLagbe email",
+          subject: "Verify your GuruLagbe email",
           html: verificationEmail(user.name, url),
         });
       },

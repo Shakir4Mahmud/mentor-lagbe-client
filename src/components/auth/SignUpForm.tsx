@@ -125,7 +125,7 @@ export default function SignUpForm() {
     >
       <h1 className="text-3xl font-semibold">Create your account</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Join MentorLagbe and start your learning or teaching journey.
+        Join GuruLagbe and start your learning or teaching journey.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>

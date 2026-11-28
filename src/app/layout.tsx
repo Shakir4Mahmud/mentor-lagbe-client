@@ -16,9 +16,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "MentorLagbe | Find Your Ideal Tutor",
+  title: "GuruLagbe | Find Your Ideal Tutor",
   description:
-    "MentorLagbe is a smart tuition and mentorship platform that connects students with verified tutors.",
+    "GuruLagbe is a smart tuition and mentorship platform that connects students with verified tutors.",
 };
 
 export default function RootLayout({

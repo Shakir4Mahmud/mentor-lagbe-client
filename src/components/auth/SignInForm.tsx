@@ -118,7 +118,7 @@ export default function SignInForm() {
     >
       <h1 className="text-3xl font-semibold">Welcome back</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Sign in to continue to your MentorLagbe dashboard.
+        Sign in to continue to your GuruLagbe dashboard.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
@@ -192,7 +192,7 @@ export default function SignInForm() {
       )}
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
-        New to MentorLagbe?{" "}
+        New to GuruLagbe?{" "}
         <Link href="/sign-up" className="font-semibold text-primary hover:underline">
           Create an account
         </Link>

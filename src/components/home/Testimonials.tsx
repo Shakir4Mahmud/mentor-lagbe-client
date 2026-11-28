@@ -100,7 +100,7 @@ export default function Testimonials() {
         <SectionHeading
           eyebrow="Testimonials"
           title="Loved by students and tutors"
-          subtitle="Real stories from people who learn and teach on MentorLagbe."
+          subtitle="Real stories from people who learn and teach on GuruLagbe."
         />
       </div>
 

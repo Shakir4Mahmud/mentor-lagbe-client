@@ -8,7 +8,7 @@ export default function Logo() {
         <GraduationCap className="h-5 w-5" />
       </span>
       <span className="font-heading text-xl font-semibold tracking-tight">
-        Mentor<span className="text-accent">Lagbe</span>
+        Guru<span className="text-accent">Lagbe</span>
       </span>
     </Link>
   );

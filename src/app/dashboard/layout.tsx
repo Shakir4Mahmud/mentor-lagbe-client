@@ -6,7 +6,7 @@ import DashboardShell from "@/components/dashboard/DashboardShell";
 import type { DashboardUser } from "@/components/dashboard/types";
 
 export const metadata = {
-  title: "Dashboard | MentorLagbe",
+  title: "Dashboard | GuruLagbe",
 };
 
 async function DashboardGuard({ children }: { children: React.ReactNode }) {

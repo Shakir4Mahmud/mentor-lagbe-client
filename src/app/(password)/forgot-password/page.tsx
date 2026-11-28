@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 
 export const metadata = {
-  title: "Forgot Password | MentorLagbe",
+  title: "Forgot Password | GuruLagbe",
 };
 
 export default function ForgotPasswordPage() {

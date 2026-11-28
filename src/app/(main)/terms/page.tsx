@@ -1,8 +1,8 @@
 import LegalPage from "@/components/shared/LegalPage";
 
 export const metadata = {
-  title: "Terms & Conditions | MentorLagbe",
-  description: "The rules for using the MentorLagbe platform.",
+  title: "Terms & Conditions | GuruLagbe",
+  description: "The rules for using the GuruLagbe platform.",
 };
 
 export default function TermsPage() {
@@ -10,7 +10,7 @@ export default function TermsPage() {
     <LegalPage
       title="Terms & Conditions"
       updated="28 November 2026"
-      intro="By creating an account or using MentorLagbe you agree to these terms. They are written for students, tutors and visitors using this website."
+      intro="By creating an account or using GuruLagbe you agree to these terms. They are written for students, tutors and visitors using this website."
       sections={[
         {
           heading: "1. Who can use the service",
@@ -30,7 +30,7 @@ export default function TermsPage() {
         {
           heading: "3. Tuitions and applications",
           paragraphs: [
-            "Tutors may post tuitions subject to approval and the limits of their plan. Students may apply to tuitions and track application status. MentorLagbe facilitates contact between the parties but does not employ tutors, guarantee learning outcomes, or control offline meetings and payments between them.",
+            "Tutors may post tuitions subject to approval and the limits of their plan. Students may apply to tuitions and track application status. GuruLagbe facilitates contact between the parties but does not employ tutors, guarantee learning outcomes, or control offline meetings and payments between them.",
           ],
         },
         {
@@ -54,13 +54,13 @@ export default function TermsPage() {
         {
           heading: "6. Content ownership",
           paragraphs: [
-            "You keep ownership of the text and images you submit. By posting them you give MentorLagbe permission to display them on the platform so the service can function. You are responsible for having the right to share anything you upload.",
+            "You keep ownership of the text and images you submit. By posting them you give GuruLagbe permission to display them on the platform so the service can function. You are responsible for having the right to share anything you upload.",
           ],
         },
         {
           heading: "7. Availability and liability",
           paragraphs: [
-            "We work to keep the service available, but maintenance, provider outages or network problems may interrupt it. To the extent permitted by law, MentorLagbe is not liable for indirect losses, offline arrangements between users, or decisions made based on a listing.",
+            "We work to keep the service available, but maintenance, provider outages or network problems may interrupt it. To the extent permitted by law, GuruLagbe is not liable for indirect losses, offline arrangements between users, or decisions made based on a listing.",
           ],
         },
         {

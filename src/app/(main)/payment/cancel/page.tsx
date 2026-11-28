@@ -3,7 +3,7 @@ import { ArrowLeft, Home, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "Payment Cancelled | MentorLagbe",
+  title: "Payment Cancelled | GuruLagbe",
 };
 
 export default function PaymentCancelPage() {

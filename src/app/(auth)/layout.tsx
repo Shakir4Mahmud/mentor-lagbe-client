@@ -41,7 +41,7 @@ export default function AuthLayout({
         </div>
 
         <p className="relative text-sm text-white/60">
-          MentorLagbe, smart tuition and mentorship platform
+          GuruLagbe, smart tuition and mentorship platform
         </p>
       </div>
 

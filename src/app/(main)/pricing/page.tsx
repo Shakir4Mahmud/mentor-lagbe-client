@@ -3,7 +3,7 @@ import PricingSection from "@/components/home/PricingSection";
 import Faq from "@/components/home/Faq";
 
 export const metadata = {
-  title: "Pricing | MentorLagbe",
+  title: "Pricing | GuruLagbe",
 };
 
 export default function PricingPage() {

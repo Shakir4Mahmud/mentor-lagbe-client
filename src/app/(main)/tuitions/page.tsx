@@ -6,7 +6,7 @@ import TuitionCardSkeleton from "@/components/shared/TuitionCardSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata = {
-  title: "Browse Tuitions | MentorLagbe",
+  title: "Browse Tuitions | GuruLagbe",
 };
 
 function TuitionsLoading() {

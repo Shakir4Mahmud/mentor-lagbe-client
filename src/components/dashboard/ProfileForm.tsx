@@ -201,7 +201,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
               Pro plan active
             </h3>
             <p className="relative mt-1 text-sm text-white/75">
-              You are enjoying all the Pro benefits on MentorLagbe.
+              You are enjoying all the Pro benefits on GuruLagbe.
             </p>
           </div>
         ) : (

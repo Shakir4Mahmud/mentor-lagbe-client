@@ -131,7 +131,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10 py-5 text-center text-sm text-white/60">
-        © {year} MentorLagbe. All rights reserved.
+        © {year} GuruLagbe. All rights reserved.
       </div>
     </footer>
   );

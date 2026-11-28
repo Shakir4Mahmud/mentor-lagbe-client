@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import SslPaymentSuccess from "@/components/payment/SslPaymentSuccess";
 
 export const metadata = {
-  title: "SSLCommerz Payment Status | MentorLagbe",
+  title: "SSLCommerz Payment Status | GuruLagbe",
 };
 
 export default function SslSuccessPage() {

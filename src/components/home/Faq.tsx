@@ -7,7 +7,7 @@ import SectionHeading from "@/components/shared/SectionHeading";
 
 const faqs = [
   {
-    question: "Is MentorLagbe free to use?",
+    question: "Is GuruLagbe free to use?",
     answer:
       "Yes. Students can browse and apply for free, and tutors can post up to 2 tuitions for free. Pro plans unlock extra benefits.",
   },

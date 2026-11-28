@@ -1,9 +1,9 @@
 import LegalPage from "@/components/shared/LegalPage";
 
 export const metadata = {
-  title: "Privacy Policy | MentorLagbe",
+  title: "Privacy Policy | GuruLagbe",
   description:
-    "How MentorLagbe collects, uses and protects your personal information.",
+    "How GuruLagbe collects, uses and protects your personal information.",
 };
 
 export default function PrivacyPage() {
@@ -11,7 +11,7 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       updated="28 November 2026"
-      intro="MentorLagbe connects students with tutors. This policy explains what information we collect, why we need it, who can see it and how you can ask us to remove it."
+      intro="GuruLagbe connects students with tutors. This policy explains what information we collect, why we need it, who can see it and how you can ask us to remove it."
       sections={[
         {
           heading: "1. Information we collect",

@@ -1,8 +1,8 @@
 import LegalPage from "@/components/shared/LegalPage";
 
 export const metadata = {
-  title: "Refund & Cancellation Policy | MentorLagbe",
-  description: "How to request a refund for a MentorLagbe Pro plan.",
+  title: "Refund & Cancellation Policy | GuruLagbe",
+  description: "How to request a refund for a GuruLagbe Pro plan.",
 };
 
 export default function RefundPage() {
@@ -39,7 +39,7 @@ export default function RefundPage() {
           bullets: [
             "You changed your mind after actively using Pro features such as unlimited tutor posts or priority booking.",
             "The request is made more than 7 days after the transaction date.",
-            "The payment relates to an offline arrangement between a student and a tutor — that money is handled outside MentorLagbe.",
+            "The payment relates to an offline arrangement between a student and a tutor — that money is handled outside GuruLagbe.",
           ],
         },
         {

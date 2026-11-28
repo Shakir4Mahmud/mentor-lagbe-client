@@ -1,6 +1,6 @@
-# MentorLagbe — Client
+# GuruLagbe — Client
 
-MentorLagbe is a tuition and mentorship marketplace that connects students with verified tutors. This repository is the **Next.js client** (App Router). The REST API lives in a separate Express repository: [`mentor-lagbe-server`](https://github.com/Shakir4Mahmud/mentor-lagbe-server).
+GuruLagbe is a tuition and mentorship marketplace that connects students with verified tutors. This repository is the **Next.js client** (App Router). The REST API lives in a separate Express repository: [`mentor-lagbe-server`](https://github.com/Shakir4Mahmud/mentor-lagbe-server).
 
 **Live:** https://mentor-lagbe-iota.vercel.app
 
@@ -91,14 +91,14 @@ Copy `.env.example` to `.env.local` and fill in the values.
 
 | Variable | Used for | Example |
 |---|---|---|
-| `MONGODB_URI` | MongoDB Atlas connection (Better Auth + session/JWT bridge) | `mongodb+srv://user:pass@cluster.mongodb.net/MentorLagbe` |
+| `MONGODB_URI` | MongoDB Atlas connection (Better Auth + session/JWT bridge) | `mongodb+srv://user:pass@cluster.mongodb.net/GuruLagbe` |
 | `BETTER_AUTH_SECRET` | Signs/validates Better Auth cookies | 32+ random characters |
 | `BETTER_AUTH_URL` | Canonical client origin used by Better Auth | `http://localhost:3000` / Vercel URL |
 | `JWT_SECRET` | Must match the server's `JWT_SECRET` | 64 random characters |
 | `NEXT_PUBLIC_API_URL` | Base URL of the Express server | `http://localhost:5000` / Render URL |
 | `IMGBB_KEY` | ImgBB API key — **server-only**, must not use the `NEXT_PUBLIC_` prefix | — |
 | `RESEND_API_KEY` | Resend API key for verification and password-reset emails | `re_…` |
-| `EMAIL_FROM` | Verified sender address | `MentorLagbe <onboarding@resend.dev>` |
+| `EMAIL_FROM` | Verified sender address | `GuruLagbe <onboarding@resend.dev>` |
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID (optional social login) | — |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | — |
 | `NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED` | Public UI flag — set `true` to show Google buttons (inlined at build time) | `false` |
@@ -122,7 +122,7 @@ npm install
 cp .env.example .env.local
 
 # 3. Start the Express API (separate repository) on port 5000
-#    in C:\MentorLagbe\mentor-lagbe-server: npm run dev
+#    in the server repository: npm run dev
 
 # 4. Start the client
 npm run dev

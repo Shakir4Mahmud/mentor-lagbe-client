@@ -289,7 +289,7 @@ export default function PricingSection({
               {plan.proTitle}
             </h3>
             <p className="relative mt-1 text-sm text-white/70">
-              Unlock the full MentorLagbe experience
+              Unlock the full GuruLagbe experience
             </p>
 
             <div className="relative mt-6 flex items-end gap-2">
