@@ -7,7 +7,7 @@ import Logo from "@/components/shared/Logo";
 function NavbarFallback() {
   return (
     <header className="sticky top-0 z-50 px-3 pt-3 sm:px-6">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full border border-border bg-card/70 px-5 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full border border-border bg-card/95 px-5 backdrop-blur-none sm:bg-card/70 sm:backdrop-blur-xl">
         <Logo />
         <div className="h-9 w-9 animate-pulse rounded-full bg-muted" />
       </div>

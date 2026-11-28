@@ -15,8 +15,8 @@ export default function PageHeader({
 }: PageHeaderProps) {
   return (
     <section className="relative -mt-[76px] overflow-hidden bg-hero-gradient pt-[76px] text-white">
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute -right-24 -top-24 hidden h-72 w-72 rounded-full bg-accent/20 blur-3xl sm:block" />
+      <div className="absolute -bottom-24 -left-24 hidden h-72 w-72 rounded-full bg-white/10 blur-3xl sm:block" />
       <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:28px_28px]" />
 
       <div className="relative mx-auto max-w-3xl px-4 pb-24 pt-16 text-center sm:px-6">
@@ -25,7 +25,7 @@ export default function PageHeader({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="inline-block rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm backdrop-blur"
+            className="inline-block rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm backdrop-blur-none sm:backdrop-blur"
           >
             {eyebrow}
           </motion.span>

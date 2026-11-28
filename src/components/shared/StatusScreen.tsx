@@ -15,8 +15,8 @@ export default function StatusScreen({
 }: StatusScreenProps) {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-hero-gradient px-6 text-center text-white">
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute -right-24 -top-24 hidden h-72 w-72 rounded-full bg-accent/20 blur-3xl sm:block" />
+      <div className="absolute -bottom-24 -left-24 hidden h-72 w-72 rounded-full bg-white/10 blur-3xl sm:block" />
 
       <div className="absolute left-6 top-6 [&_a>span:nth-child(2)]:text-white">
         <Logo />

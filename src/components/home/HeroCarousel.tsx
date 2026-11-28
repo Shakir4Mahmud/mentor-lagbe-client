@@ -6,6 +6,7 @@ import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent }
 import { motion } from "motion/react";
 import { CheckCircle2, ChevronLeft, ChevronRight, Video } from "lucide-react";
 import type { HeroCard } from "@/lib/heroCards";
+import { useIsMobile } from "@/lib/useIsMobile";
 
 type HeroCarouselProps = {
   cards: HeroCard[];
@@ -20,10 +21,24 @@ function getInitials(name: string) {
   return initials.toUpperCase();
 }
 
+// Unsplash URLs already carry w=600. Serve smaller files on phones without
+// touching the editable image URLs in heroCards.ts. Custom/local images are
+// left alone.
+function heroImageSrcSet(url: string) {
+  if (!url.startsWith("https://images.unsplash.com/") || !url.includes("w=")) {
+    return undefined;
+  }
+
+  const small = url.replace(/([?&])w=\d+/, "$1w=320");
+  const medium = url.replace(/([?&])w=\d+/, "$1w=480");
+
+  return small + " 320w, " + medium + " 480w, " + url + " 600w";
+}
+
 export default function HeroCarousel({ cards }: HeroCarouselProps) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [spread, setSpread] = useState(105);
+  const isMobile = useIsMobile();
 
   // Pointer drag/swipe: same handler covers touch screens and mouse laptops.
   const dragStartX = useRef<number | null>(null);
@@ -31,6 +46,7 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
 
   const total = cards.length;
   const half = Math.floor(total / 2);
+  const spread = isMobile ? 70 : 105;
 
   // Auto change: 3.5 second pore porer card
   useEffect(() => {
@@ -46,24 +62,6 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
       clearInterval(timer);
     };
   }, [paused, total]);
-
-  // Mobile e card gulo kache kache thakbe
-  useEffect(() => {
-    function updateSpread() {
-      if (window.innerWidth < 640) {
-        setSpread(70);
-      } else {
-        setSpread(105);
-      }
-    }
-
-    updateSpread();
-    window.addEventListener("resize", updateSpread);
-
-    return () => {
-      window.removeEventListener("resize", updateSpread);
-    };
-  }, []);
 
   // Shared by drag, dots and the laptop arrow buttons.
   function changeCard(direction: -1 | 1) {
@@ -172,8 +170,8 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Glow behind cards */}
-      <div className="absolute left-1/2 top-[45%] h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/25 blur-3xl" />
+      {/* Glow behind cards — smaller blur radius on phones */}
+      <div className="absolute left-1/2 top-[45%] h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/25 blur-xl sm:blur-3xl" />
 
       {/* Laptop/mouse arrows — hidden on phones and tablets where swipe is used */}
       <button
@@ -196,10 +194,14 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
         <ChevronRight className="h-5 w-5" />
       </button>
 
-      {/* Whole stack floats up and down */}
+      {/* Whole stack floats up and down — paused on phones to save frames */}
       <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        animate={isMobile ? { y: 0 } : { y: [0, -10, 0] }}
+        transition={
+          isMobile
+            ? { duration: 0 }
+            : { duration: 5, repeat: Infinity, ease: "easeInOut" }
+        }
         className="relative h-[400px] sm:h-[420px]"
         style={{ perspective: 1000 }}
       >
@@ -242,7 +244,12 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
                 opacity: cardOpacity,
                 filter: "blur(" + blurAmount + "px)",
               }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
+              transition={{
+                duration: isMobile ? 0.35 : 0.6,
+                ease: "easeInOut",
+                // Animated blur repaints every frame; snap it on phones.
+                filter: { duration: isMobile ? 0 : 0.6 },
+              }}
               className="absolute left-1/2 top-1/2 cursor-pointer overflow-hidden rounded-3xl shadow-2xl shadow-black/30"
               style={{
                 width: 240,
@@ -274,7 +281,12 @@ export default function HeroCarousel({ cards }: HeroCarouselProps) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={card.image}
+                  srcSet={heroImageSrcSet(card.image)}
+                  sizes="240px"
                   alt={card.subject}
+                  loading={distance === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  fetchPriority={distance === 0 ? "high" : "low"}
                   className="absolute inset-0 h-full w-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";

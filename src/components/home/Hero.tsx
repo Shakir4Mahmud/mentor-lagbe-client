@@ -53,8 +53,8 @@ export default function Hero() {
   return (
     <section className="relative -mt-[76px] overflow-hidden bg-hero-gradient pt-[76px] text-white">
       {/* Background decoration */}
-      <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-accent/20 blur-3xl" />
-      <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute -right-32 -top-32 hidden h-96 w-96 rounded-full bg-accent/20 blur-3xl sm:block" />
+      <div className="absolute -bottom-32 -left-32 hidden h-96 w-96 rounded-full bg-white/10 blur-3xl sm:block" />
       <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:28px_28px]" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-28 pt-14 sm:px-6 lg:grid-cols-2 lg:pt-20">
@@ -64,7 +64,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm backdrop-blur"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm backdrop-blur-none sm:backdrop-blur"
           >
             <Sparkles className="h-4 w-4 text-accent" />
             Smart tuition and mentorship platform

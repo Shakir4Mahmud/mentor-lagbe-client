@@ -1,9 +1,15 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useAnimationFrame, useMotionValue } from "motion/react";
+import {
+  motion,
+  useAnimationFrame,
+  useInView,
+  useMotionValue,
+} from "motion/react";
 import { Star, Quote } from "lucide-react";
 import SectionHeading from "@/components/shared/SectionHeading";
+import { useIsMobile } from "@/lib/useIsMobile";
 
 type Testimonial = {
   name: string;
@@ -52,16 +58,21 @@ const testimonials: Testimonial[] = [
 ];
 
 export default function Testimonials() {
+  const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const [paused, setPaused] = useState(false);
+  const isInView = useInView(sectionRef);
+  const isMobile = useIsMobile();
 
   // 2 bar rakhlam jate scroll kokhono thame na
   const loopItems = [...testimonials, ...testimonials];
 
   // Protita frame e card gulo ektu kore bam e soriye dey
   useAnimationFrame((time, delta) => {
-    if (paused) {
+    // Marquee is decoration: skip the per-frame work on phones and whenever
+    // the section is offscreen. The cards and wording stay exactly the same.
+    if (paused || isMobile || !isInView) {
       return;
     }
 
@@ -84,7 +95,7 @@ export default function Testimonials() {
   });
 
   return (
-    <section className="overflow-hidden bg-muted/50 py-20">
+    <section ref={sectionRef} className="overflow-hidden bg-muted/50 py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading
           eyebrow="Testimonials"

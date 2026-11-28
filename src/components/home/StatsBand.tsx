@@ -26,8 +26,8 @@ export default function StatsBand({
 
   return (
     <section className="relative overflow-hidden bg-hero-gradient py-16 text-white">
-      <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
-      <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute -left-20 -top-20 hidden h-64 w-64 rounded-full bg-accent/20 blur-3xl sm:block" />
+      <div className="absolute -bottom-20 -right-20 hidden h-64 w-64 rounded-full bg-white/10 blur-3xl sm:block" />
       <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:28px_28px]" />
 
       <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 sm:px-6 lg:grid-cols-4">
@@ -41,7 +41,7 @@ export default function StatsBand({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.12 }}
-              className="rounded-2xl border border-white/15 bg-white/10 p-6 text-center backdrop-blur"
+              className="rounded-2xl border border-white/15 bg-white/10 p-6 text-center backdrop-blur-none sm:backdrop-blur"
             >
               <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent/20 text-accent">
                 <Icon className="h-6 w-6" />

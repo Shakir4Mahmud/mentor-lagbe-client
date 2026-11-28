@@ -86,20 +86,29 @@ export default function Navbar() {
     userImage = user.image;
   }
 
-  // scroll korle navbar er shadow bare
+  // scroll korle navbar er shadow bare — one update per frame, same look.
   useEffect(() => {
+    let frame = 0;
+
+    function update() {
+      const next = window.scrollY > 10;
+      setScrolled((current) => (current === next ? current : next));
+      frame = 0;
+    }
+
     function handleScroll() {
-      if (window.scrollY > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
+      if (frame === 0) {
+        frame = window.requestAnimationFrame(update);
       }
     }
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      if (frame !== 0) {
+        window.cancelAnimationFrame(frame);
+      }
     };
   }, []);
 
@@ -159,7 +168,7 @@ export default function Navbar() {
   }
 
   let navClass =
-    "mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full border bg-card/70 px-3 backdrop-blur-xl transition-all duration-300 sm:px-4";
+    "mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full border bg-card/95 px-3 backdrop-blur-none transition-all duration-300 sm:bg-card/70 sm:px-4 sm:backdrop-blur-xl";
   if (scrolled) {
     navClass = navClass + " border-primary/20 shadow-xl shadow-primary/10";
   } else {

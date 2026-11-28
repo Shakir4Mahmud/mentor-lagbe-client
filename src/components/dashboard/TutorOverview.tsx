@@ -518,13 +518,13 @@ export default function TutorOverview() {
         transition={{ duration: 0.5 }}
         className="relative overflow-hidden rounded-3xl bg-hero-gradient p-6 text-white shadow-xl shadow-primary/20 sm:p-8"
       >
-        <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-accent/25 blur-3xl" />
-        <div className="absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -right-16 -top-16 hidden h-64 w-64 rounded-full bg-accent/25 blur-3xl sm:block" />
+        <div className="absolute -bottom-20 left-10 hidden h-56 w-56 rounded-full bg-white/10 blur-3xl sm:block" />
         <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:26px_26px]" />
 
         <div className="relative flex flex-wrap items-start justify-between gap-6">
           <div className="max-w-xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs backdrop-blur">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs backdrop-blur-none sm:backdrop-blur">
               <Sparkles className="h-3.5 w-3.5 text-accent" />
               {isPro ? "Pro Tutor" : "Free Tutor"}
             </span>
@@ -568,7 +568,7 @@ export default function TutorOverview() {
             return (
               <div
                 key={panel.label}
-                className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur"
+                className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-none sm:backdrop-blur"
               >
                 <div className="flex items-center gap-2 text-xs text-white/75">
                   <Icon className="h-4 w-4 text-accent" />

@@ -63,7 +63,7 @@ export default function DashboardTopbar({
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-none sm:bg-background/80 sm:backdrop-blur-xl">
       <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
         {/* Mobile menu */}
         <Button

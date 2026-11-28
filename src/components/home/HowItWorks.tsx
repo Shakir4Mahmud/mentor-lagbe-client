@@ -109,8 +109,8 @@ export default function HowItWorks() {
       className="relative scroll-mt-24 overflow-hidden bg-muted/50 py-20"
     >
       {/* Background decoration */}
-      <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
-      <div className="absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
+      <div className="absolute -left-24 top-10 hidden h-72 w-72 rounded-full bg-primary/10 blur-3xl sm:block" />
+      <div className="absolute -right-24 bottom-10 hidden h-72 w-72 rounded-full bg-accent/15 blur-3xl sm:block" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading
@@ -228,7 +228,7 @@ export default function HowItWorks() {
                   >
                     {/* Node */}
                     <div className="relative mx-auto h-20 w-20">
-                      <span className="absolute inset-0 animate-ping rounded-full bg-primary/20 [animation-duration:2.8s]" />
+                      <span className="absolute inset-0 hidden animate-ping rounded-full bg-primary/20 [animation-duration:2.8s] sm:block" />
                       <div className="relative flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-card text-primary shadow-xl shadow-primary/20 transition duration-300 group-hover:-translate-y-1.5 group-hover:bg-primary group-hover:text-primary-foreground">
                         <Icon className="h-8 w-8" />
                       </div>
@@ -238,7 +238,7 @@ export default function HowItWorks() {
                     </div>
 
                     {/* Card */}
-                    <div className="relative mt-6 overflow-hidden rounded-2xl border bg-card/80 p-5 text-center shadow-sm backdrop-blur transition duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
+                    <div className="relative mt-6 overflow-hidden rounded-2xl border bg-card/80 p-5 text-center shadow-sm backdrop-blur-none transition duration-300 group-hover:-translate-y-1 group-hover:shadow-lg sm:backdrop-blur">
                       <span className="absolute right-3 top-1 font-heading text-5xl font-bold text-primary/10">
                         {number}
                       </span>
@@ -278,7 +278,7 @@ export default function HowItWorks() {
                     {/* Left: node ar baka line */}
                     <div className="flex w-14 shrink-0 flex-col items-center">
                       <div className="relative h-14 w-14">
-                        <span className="absolute inset-0 animate-ping rounded-full bg-primary/20 [animation-duration:2.8s]" />
+                        <span className="absolute inset-0 hidden animate-ping rounded-full bg-primary/20 [animation-duration:2.8s] sm:block" />
                         <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30">
                           <Icon className="h-6 w-6" />
                         </div>
@@ -319,7 +319,7 @@ export default function HowItWorks() {
 
                     {/* Right: card */}
                     <div className={rowBottomSpace}>
-                      <div className="relative overflow-hidden rounded-2xl border bg-card/80 p-5 shadow-sm backdrop-blur">
+                      <div className="relative overflow-hidden rounded-2xl border bg-card/80 p-5 shadow-sm backdrop-blur-none sm:backdrop-blur">
                         <span className="absolute right-3 top-0 font-heading text-5xl font-bold text-primary/10">
                           {number}
                         </span>

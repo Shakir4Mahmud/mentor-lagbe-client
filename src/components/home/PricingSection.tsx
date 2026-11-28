@@ -278,7 +278,7 @@ export default function PricingSection({
 
           {/* Pro card */}
           <div className="relative flex h-full flex-col overflow-hidden rounded-3xl bg-hero-gradient p-8 text-white shadow-2xl shadow-primary/30">
-            <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent/25 blur-3xl" />
+            <div className="absolute -right-16 -top-16 hidden h-48 w-48 rounded-full bg-accent/25 blur-3xl sm:block" />
 
             <span className="absolute right-6 top-6 rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground">
               Most Popular
