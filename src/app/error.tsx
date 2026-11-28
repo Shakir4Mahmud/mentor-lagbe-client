@@ -6,7 +6,6 @@ import StatusScreen from "@/components/shared/StatusScreen";
 import { Button } from "@/components/ui/button";
 
 export default function ErrorPage({
-  error,
   reset,
 }: {
   error: Error & { digest?: string };

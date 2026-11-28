@@ -7,15 +7,31 @@ export function roleDashboardPath(role?: string | null) {
   return "/dashboard/student";
 }
 
-// Login er por redirect param safe kina check kore (external URL block)
-export function safeRedirectPath(value: string | null | undefined) {
-  if (!value) {
+// Login er por redirect param safe kina check kore.
+// Same-origin relative path chada kisu allow kori na — `//evil.com` ar
+// `/\evil.com` (backslash bypass) duto-i block hoy.
+export function safeRedirectPath(
+  value: string | null | undefined,
+  base?: string
+) {
+  if (!value || !value.startsWith("/")) {
     return null;
   }
 
-  if (!value.startsWith("/") || value.startsWith("//")) {
+  const origin =
+    base ??
+    (typeof window === "undefined" ? "http://localhost" : window.location.origin);
+
+  try {
+    const normalized = value.replace(/\\/g, "/");
+    const url = new URL(normalized, origin);
+
+    if (url.origin !== new URL(origin).origin || !url.pathname.startsWith("/")) {
+      return null;
+    }
+
+    return url.pathname + url.search + url.hash;
+  } catch {
     return null;
   }
-
-  return value;
 }

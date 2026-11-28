@@ -69,13 +69,6 @@ async function TuitionDetailsContent({
     day: "numeric",
   });
 
-  let modeClass = "rounded-full px-3 py-1 text-xs font-semibold shadow ";
-  if (tuition.mode === "Online") {
-    modeClass = modeClass + "bg-primary text-primary-foreground";
-  } else {
-    modeClass = modeClass + "bg-accent text-accent-foreground";
-  }
-
   let tutorBio = "This tutor has not added a bio yet.";
   if (tutor.bio !== "") {
     tutorBio = tutor.bio;

@@ -30,8 +30,8 @@ export default function ResetPasswordForm() {
 
   function validate() {
     const next: FormErrors = {};
-    if (password.length < 6) {
-      next.password = "Password must be at least 6 characters";
+    if (password.length < 10) {
+      next.password = "Password must be at least 10 characters";
     }
     if (password !== confirm) {
       next.confirm = "Passwords do not match";

@@ -3,28 +3,54 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { getAuth } from "@/lib/auth";
 
+const JWT_ISSUER = process.env.JWT_ISSUER || "mentorlagbe";
+const JWT_AUDIENCE = process.env.JWT_AUDIENCE || "mentorlagbe-api";
+
 export async function GET() {
-  const requestHeaders = await headers();
-  const session = await getAuth().api.getSession({ headers: requestHeaders });
+  // Short-lived, non-cacheable token — ei token-ti shudhu Express API-te use hoy.
+  const noStore = { "Cache-Control": "no-store" };
 
-  if (!session) {
-    return NextResponse.json({ message: "Not logged in" }, { status: 401 });
-  }
+  try {
+    const requestHeaders = await headers();
+    const session = await getAuth().api.getSession({ headers: requestHeaders });
 
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
+    if (!session) {
+      return NextResponse.json(
+        { message: "Not logged in" },
+        { status: 401, headers: noStore }
+      );
+    }
+
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error("JWT_SECRET is missing");
+      return NextResponse.json(
+        { message: "Token service unavailable" },
+        { status: 500, headers: noStore }
+      );
+    }
+
+    const token = jwt.sign(
+      {
+        email: session.user.email,
+        name: session.user.name,
+      },
+      secret,
+      {
+        algorithm: "HS256",
+        issuer: JWT_ISSUER,
+        audience: JWT_AUDIENCE,
+        subject: session.user.id,
+        expiresIn: "15m",
+      }
+    );
+
+    return NextResponse.json({ token }, { headers: noStore });
+  } catch (error) {
+    console.error("Token issue failed", error);
     return NextResponse.json(
-      { message: "JWT_SECRET is missing" },
-      { status: 500 }
+      { message: "Token service unavailable" },
+      { status: 500, headers: noStore }
     );
   }
-
-  const payload = {
-    email: session.user.email,
-    name: session.user.name,
-  };
-
-  const token = jwt.sign(payload, secret, { expiresIn: "1h" });
-
-  return NextResponse.json({ token: token });
 }

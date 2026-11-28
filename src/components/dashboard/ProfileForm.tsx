@@ -3,12 +3,22 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Crown, Loader2, Mail, Save, Sparkles } from "lucide-react";
+import { Crown, Loader2, Mail, Save, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import ImageUploader from "@/components/shared/ImageUploader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,6 +51,11 @@ export default function ProfileForm({ user }: ProfileFormProps) {
   const [image, setImage] = useState(user.image);
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const isPro = user.plan === "pro";
   const roleLabel = user.role.charAt(0).toUpperCase() + user.role.slice(1);
@@ -111,6 +126,37 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     setSaving(false);
 
     // sidebar er server data notun kore ana
+    router.refresh();
+  }
+
+  async function handleDeleteAccount() {
+    if (deleteConfirm !== "DELETE") {
+      return;
+    }
+
+    setDeleting(true);
+
+    // Password needy hole session fresh na hole Better Auth chay. Google
+    // sign-in-e password thake na — shekhetre field-ti khali rakha jay.
+    const result = await authClient.deleteUser(
+      deletePassword.trim() === ""
+        ? {}
+        : { password: deletePassword }
+    );
+
+    if (result.error) {
+      toast.error(
+        result.error.message ||
+          "Could not delete the account. Please try again."
+      );
+      setDeleting(false);
+      return;
+    }
+
+    await authClient.signOut();
+    toast.success("Your account has been deleted.");
+    setDeleteOpen(false);
+    router.replace("/");
     router.refresh();
   }
 
@@ -267,6 +313,100 @@ export default function ProfileForm({ user }: ProfileFormProps) {
               )}
               {saving ? "Saving..." : "Save Changes"}
             </Button>
+          </div>
+
+          {/* Account delete — shob role-er jonno available */}
+          <div className="mt-10 border-t pt-6">
+            <h3 className="text-lg font-semibold text-destructive">
+              Delete account
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Permanently remove your account, tuitions, applications and
+              payment records. This cannot be undone.
+              {user.role === "admin"
+                ? " Deleting the admin account will remove the only admin access."
+                : ""}
+            </p>
+
+            <Dialog
+              open={deleteOpen}
+              onOpenChange={(open) => {
+                setDeleteOpen(open);
+                if (!open) {
+                  setDeleteConfirm("");
+                  setDeletePassword("");
+                }
+              }}
+            >
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  className="mt-4 rounded-full"
+                  disabled={saving}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete my account
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Delete your account?</DialogTitle>
+                  <DialogDescription>
+                    This permanently deletes your account and all related
+                    data. Type DELETE to confirm.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-4 py-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="delete-confirm">Type DELETE</Label>
+                    <Input
+                      id="delete-confirm"
+                      value={deleteConfirm}
+                      onChange={(e) => setDeleteConfirm(e.target.value)}
+                      placeholder="DELETE"
+                      autoComplete="off"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="delete-password">
+                      Password (optional)
+                    </Label>
+                    <Input
+                      id="delete-password"
+                      type="password"
+                      value={deletePassword}
+                      onChange={(e) => setDeletePassword(e.target.value)}
+                      placeholder="Leave blank if you signed in with Google"
+                      autoComplete="current-password"
+                    />
+                  </div>
+                </div>
+
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button type="button" variant="outline" disabled={deleting}>
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    disabled={deleting || deleteConfirm !== "DELETE"}
+                    onClick={handleDeleteAccount}
+                  >
+                    {deleting ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="mr-2 h-4 w-4" />
+                    )}
+                    {deleting ? "Deleting..." : "Delete account"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </form>
       </div>

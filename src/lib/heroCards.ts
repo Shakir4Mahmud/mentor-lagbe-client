@@ -14,8 +14,24 @@ function img(photoId: string) {
   );
 }
 
-// Hero cards category tile. Ekhane kono tutor/fee data rakha hoy na —
-// card-e click korle oi category-r tuition list-e pathano hoy.
+// ============================================================================
+// HERO CARDS — EDIT GUIDE (design/animation kisu bodle giri na)
+// ----------------------------------------------------------------------------
+// 1) Card-er text/image/change: just nicher `heroCards` array-i edit koro.
+//    - subject  -> card-e dekha title + click korle jabe /tuitions?subject=<subject>
+//    - subtitle -> title-er niche choto text
+//    - image    -> photo URL. Nijer image chai: image-ta `public/hero/`-e dio
+//                  ar emn likho: image: "/hero/amar-image.jpg"
+//    - color    -> card-er background color (hex)
+//    - id       -> unique thakte hobe (dot/animation-er jonno)
+// 2) Card add/remove korte chai: array-te ekta object add/remove koro.
+//    Animation auto adjust hoy; alada kore kisu change korte hobe na.
+// 3) Image recommended: 600x800 px, JPG/WebP, 5 MB-er kom.
+//    Detail guide: docs/HERO_CARDS.md
+//
+// Ekhane kono tutor/fee data rakha hoy na — card-e click korle oi category-r
+// tuition list-e pathano hoy. Testimonials alada file-e, eta touch koro na.
+// ============================================================================
 export const heroCards: HeroCard[] = [
   {
     id: "arts",

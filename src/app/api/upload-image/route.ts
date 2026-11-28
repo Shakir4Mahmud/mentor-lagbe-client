@@ -44,9 +44,29 @@ export async function POST(request: Request) {
     );
   }
 
-  // Migration fallback: porono NEXT_PUBLIC_IMGBB_KEY hosting env-e thakle
-  // kisu na bANGE. Naya deploy-e IMGBB_KEY set korar por porono ta delete koro.
-  const apiKey = process.env.IMGBB_KEY || process.env.NEXT_PUBLIC_IMGBB_KEY;
+  // File-er actual content-o image kina check kori (content-type spoof block).
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  const isPng =
+    bytes[0] === 0x89 &&
+    bytes[1] === 0x50 &&
+    bytes[2] === 0x4e &&
+    bytes[3] === 0x47;
+  const isGif = String.fromCharCode(...bytes.slice(0, 3)) === "GIF";
+  const isWebp =
+    String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" &&
+    String.fromCharCode(...bytes.slice(8, 12)) === "WEBP";
+
+  if (!isJpeg && !isPng && !isGif && !isWebp) {
+    return Response.json(
+      { message: "Only real JPG, PNG, WEBP or GIF images are allowed" },
+      { status: 400 },
+    );
+  }
+
+  // Key shudhu server-only env-e thakbe. NEXT_PUBLIC_IMGBB_KEY fallback
+  // remove kora hoyeche — client-er kache key kakhono jay na.
+  const apiKey = process.env.IMGBB_KEY;
 
   if (!apiKey) {
     return Response.json(

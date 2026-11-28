@@ -45,7 +45,7 @@ function createAuthInstance(client: MongoClient) {
 
     emailAndPassword: {
       enabled: true,
-      minPasswordLength: 6,
+      minPasswordLength: 10,
       resetPasswordTokenExpiresIn: 15 * 60,
       revokeSessionsOnPasswordReset: true,
       // requireEmailVerification intentionally NOT enabled: existing users must
@@ -77,6 +77,39 @@ function createAuthInstance(client: MongoClient) {
 
     user: {
       modelName: "users",
+
+      // Every role (student/tutor/admin) can delete their own account from
+      // the profile page. Better Auth removes the user + sessions; the hook
+      // cleans up everything that belongs to that email in our collections.
+      deleteUser: {
+        enabled: true,
+        afterDelete: async (deletedUser) => {
+          const email = deletedUser.email;
+          const userId = deletedUser.id;
+
+          if (!email) {
+            return;
+          }
+
+          try {
+            await Promise.all([
+              db.collection("tuitions").deleteMany({ tutorEmail: email }),
+              db.collection("applications").deleteMany({
+                $or: [{ studentEmail: email }, { tutorEmail: email }],
+              }),
+              db.collection("payments").deleteMany({ userEmail: email }),
+              db.collection("account").deleteMany({ userId }),
+              db.collection("verification").deleteMany({ userId }),
+              db.collection("session").deleteMany({ userId }),
+            ]);
+          } catch (error) {
+            // Deletion already succeeded — never leave the user stuck because
+            // of a cleanup failure. Log it for the server logs.
+            console.error("Account cleanup failed", error);
+          }
+        },
+      },
+
       additionalFields: {
         role: {
           type: "string",
