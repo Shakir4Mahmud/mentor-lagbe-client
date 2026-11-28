@@ -145,13 +145,18 @@ function createAuthInstance(client: MongoClient) {
             let safeRole = "student";
             if (user.role === "tutor") {
               safeRole = "tutor";
-            } else if (!user.role) {
-              // Google profile-e role thake na. Sign-up page-e button chapar
-              // age short-lived cookie-e choice rakhi, hook eta read kore.
-              const cookieHeader = context?.request?.headers?.get("cookie") || "";
-              const hasTutorRole = cookieHeader
-                .split(";")
-                .some((part) => part.trim() === "ml_google_role=tutor");
+            } else {
+              // Google profile-e role thake na, ar Better Auth additionalFields
+              // default (`student`) hook-er age-i borte dey. Tai `!user.role`
+              // check kore kaj korlo na. Sign-up page-e tutor button chapar age
+              // short-lived cookie-e choice rakhi — hook eta read kore.
+              const isOAuthCallback =
+                typeof context?.path === "string" &&
+                context.path.startsWith("/callback/");
+              const hasTutorRole =
+                isOAuthCallback &&
+                context?.getCookie?.("ml_google_role") === "tutor";
+
               if (hasTutorRole) {
                 safeRole = "tutor";
               }
